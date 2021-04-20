@@ -1,0 +1,28 @@
+<GTK+3 immodules for Canna>
+
+Im-canna is a Canna input method module for GTK+3.
+Canna was one of popular Japanese input methods.
+
+<HOW TO INSTALL>
+$ ./configure --prefix=/usr
+$ make
+# make install
+# make install-etc
+
+You will need Canna, GTK+3, pkgconfig to build.
+
+Don't expect this will work for you.
+ABSOLUTELY NO WARRANTY
+
+<BUGS & SUGGESTION>
+Docs and comments are in English for global developer communications.
+But it's not my native tongue, so typo and wrong phrase notices
+are all welcome.
+
+<AUTHORS>
+GTK3 Version:
+stackfield <stackfield0trpg@gmail.com>
+
+GTK2 Version Original Author:
+Yukihiro Nakai
+<nakai@gnome.gr.jp>, <ynakai@redhat.com>, <nakai@FreeBSD.org>
