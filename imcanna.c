@@ -508,7 +508,19 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     } else {
       gtk_widget_show_all(cn->modewin);
     }
-    
+
+    /*
+
+       Dirty Hack for pre-52 firefox.
+       if a user uses backspace to clear a preedit,
+       firefox can't handle next backspace key.
+
+    */
+    if(cn->kslength == 0 && key->keyval == GDK_BackSpace) {
+      g_signal_emit_by_name(cn, "commit", "A"); /* dummy */
+      return FALSE;
+    }
+
     return TRUE;
   }
 
