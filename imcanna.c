@@ -373,6 +373,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       case GDK_n:
       case GDK_p:
       case GDK_o:
+      case GDK_h:
         return FALSE;
         break;
       default:
@@ -512,11 +513,12 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     /*
 
        Dirty Hack for pre-52 firefox.
-       if a user uses backspace to clear a preedit,
+       if a user uses backspace and Ctrl-h, if emacs keybind, 
+       to clear a preedit,
        firefox can't handle next backspace key.
 
     */
-    if(cn->kslength == 0 && key->keyval == GDK_BackSpace) {
+    if(cn->kslength == 0 && canna_code == 0x08) {
       g_signal_emit_by_name(cn, "commit", "A"); /* dummy */
       return FALSE;
     }
