@@ -662,7 +662,7 @@ im_canna_focus_in (GtkIMContext* context) {
     memset(cn->kakutei_buf, 0, BUFSIZ);
     g_signal_emit_by_name(cn, "preedit_changed");
   }
-  
+
   im_canna_update_modewin(cn);  
   gtk_widget_show(cn->modewin);
 }
@@ -743,8 +743,6 @@ im_canna_reset(GtkIMContext* context) {
     cn->commit_str = NULL;
   }
 
-  cn->ja_input_mode = FALSE;
-  
   memset(cn->workbuf, 0, BUFSIZ);
   memset(cn->kakutei_buf, 0, BUFSIZ);
   g_signal_emit_by_name(cn, "preedit_changed");
