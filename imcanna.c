@@ -513,8 +513,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     /*
 
        Dirty Hack for pre-52 firefox.
-       if a user uses backspace and Ctrl-h, if emacs keybind, 
-       to clear a preedit,
+       if a user uses backspace or Ctrl-h(Emacs Keybind) to clear a preedit,
        firefox can't handle next backspace key.
 
     */
