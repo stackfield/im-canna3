@@ -600,18 +600,20 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
     attr->start_index = 0;
     attr->end_index = strlen(*str) ;
     pango_attr_list_insert(*attrs, attr);
-    
-    attr = pango_attr_background_new(0, 0, 0);
-    attr->start_index = index_mb2utf8(cn->ks.echoStr, cn->ks.revPos);
-    attr->end_index = index_mb2utf8(cn->ks.echoStr,
-				      cn->ks.revPos+cn->ks.revLen);
-    pango_attr_list_insert(*attrs, attr);
 
-    attr = pango_attr_foreground_new(0xffff, 0xffff, 0xffff);
-    attr->start_index = index_mb2utf8(cn->ks.echoStr, cn->ks.revPos);
-    attr->end_index = index_mb2utf8(cn->ks.echoStr,
+    if (cn->ks.revLen > 0) {
+      attr = pango_attr_background_new(0, 0, 0);
+      attr->start_index = index_mb2utf8(cn->ks.echoStr, cn->ks.revPos);
+      attr->end_index = index_mb2utf8(cn->ks.echoStr,
 				      cn->ks.revPos+cn->ks.revLen);
-    pango_attr_list_insert(*attrs, attr);
+      pango_attr_list_insert(*attrs, attr);
+
+      attr = pango_attr_foreground_new(0xffff, 0xffff, 0xffff);
+      attr->start_index = index_mb2utf8(cn->ks.echoStr, cn->ks.revPos);
+      attr->end_index = index_mb2utf8(cn->ks.echoStr,
+				      cn->ks.revPos+cn->ks.revLen);
+      pango_attr_list_insert(*attrs, attr);
+    }
   }
 
   if (cursor_pos != NULL) {
