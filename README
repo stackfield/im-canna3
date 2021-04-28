@@ -18,7 +18,6 @@ ABSOLUTELY NO WARRANTY
 * --enable-hack-for-firefox52
 To enable to an action which firefox52 (or its variant) completely able to
 handle backspace-key event when preedit is empty. (default=no).
- 
 
 <BUGS & SUGGESTION>
 Docs and comments are in English for global developer communications.
