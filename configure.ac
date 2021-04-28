@@ -8,6 +8,8 @@ VERSION=0.9
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 
+AC_CONFIG_HEADERS([config.h:config.h.in])
+
 AC_PROG_CC
 AC_DISABLE_STATIC([])
 LT_INIT
@@ -15,10 +17,10 @@ LT_INIT
 ALL_LINGUAS="ja"
 AC_SUBST(ALL_LINGUAS)
 
-GETTEXT_PACKAGE=im-canna
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
-AM_GLIB_GNU_GETTEXT
+#GETTEXT_PACKAGE=im-canna
+#AC_SUBST(GETTEXT_PACKAGE)
+#AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
+#AM_GLIB_GNU_GETTEXT
 
 GTK_DEP_CFLAGS=`pkg-config gtk+-3.0 --cflags`
 GTK_DEP_LIBS=`pkg-config gtk+-3.0 --libs`
@@ -41,6 +43,17 @@ AC_SUBST(LT_CURRENT_MINUS_AGE)
 dnl Canna check
 AC_CHECK_HEADER(canna/jrkanji.h,,AC_MSG_ERROR(No Canna header))
 AC_CHECK_LIB(canna, jrKanjiString,, AC_MSG_ERROR(No Canna library))
+
+dnl
+AC_ARG_ENABLE([hack-for-firefox52],
+	[AS_HELP_STRING([--enable-hack-for-firefox52],
+	 [enable to an action which firefox52 (or its variant) to completely able to handle backspace-key event when preedit is empty. (default=no)])],
+	 [],
+	 [enable_hack_for_firefox52=no])
+
+AS_IF([test "x$enable_hack_for_firefox52" != xno],
+    [AC_DEFINE([USE_HACK_FOR_FIREFOX52], [1],[for firefox52 hack])]
+    )
 
 AC_CONFIG_FILES([
 Makefile
