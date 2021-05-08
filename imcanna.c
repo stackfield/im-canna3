@@ -475,10 +475,12 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
        firefox can't handle next backspace key.
 
     */
+#ifdef USE_HACK_FOR_FIREFOX52
     if(cn->kslength == 0 && canna_code == 0x08) {
       g_signal_emit_by_name(cn, "commit", "A"); /* dummy */
       return FALSE;
     }
+#endif
 
     return TRUE;
   }

@@ -23,6 +23,8 @@
 #define bindtextdomain(Domain,Directory) (Domain) 
 #endif
 
+#include "config.h"
+
 #include <canna/jrkanji.h>
 
 #include <gtk/gtk.h>
