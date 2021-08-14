@@ -309,17 +309,20 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       memset(cn->workbuf, 0, BUFSIZ);
       memset(cn->kakutei_buf, 0, BUFSIZ);
       g_signal_emit_by_name(cn, "preedit_changed");
+      g_signal_emit_by_name(cn, "preedit_start");
       handle_modebuf(cn);
       im_canna_update_modewin(cn);
-      gtk_widget_show_all(cn->modewin);
+      gtk_widget_show(cn->modewin);
     } else {
       im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       cn->ja_input_mode = FALSE;
       gtk_widget_hide(cn->candwin);
       memset(cn->workbuf, 0, BUFSIZ);
       memset(cn->kakutei_buf, 0, BUFSIZ);
+      im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
       g_signal_emit_by_name(cn, "preedit_changed");
+      g_signal_emit_by_name(cn, "preedit_end");
     }    
     return TRUE;
   }
@@ -329,17 +332,18 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   /* Function mode */
   if (mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
     return im_canna_function_mode(context, key);
-  } else {
-    handle_modebuf(cn);
-    im_canna_update_modewin(cn);
-    gtk_widget_show_all(cn->modewin);
+  } else {  
+  handle_modebuf(cn);
+  im_canna_update_modewin(cn);
   }
-
+  
   /* English mode */
   if( cn->ja_input_mode == FALSE ) {
     gunichar keyinput = gdk_keyval_to_unicode(key->keyval);
     gchar ubuf[7];
 
+    gtk_widget_hide(cn->modewin);
+    
     if( key->state & GDK_CONTROL_MASK )
       return FALSE;
 

@@ -78,6 +78,7 @@ im_canna_update_modewin(IMContextCanna* cn) {
     gtk_widget_hide(cn->modewin);
   }
   */
+
   handle_modebuf(cn);
 
   if(cn->modebuf_utf8 == NULL)
@@ -103,10 +104,8 @@ im_canna_update_modewin(IMContextCanna* cn) {
 
   im_canna_move_modewin(cn);
 
-  if(cn->ja_input_mode == FALSE) {
-    gtk_window_resize (GTK_WINDOW(cn->modewin), 1, 1);
-    gtk_widget_show_all(cn->modewin);
-  }
+  gtk_window_resize (GTK_WINDOW(cn->modewin), 1, 1);
+  gtk_widget_show(cn->modelabel);
 }
 
 void im_canna_move_modewin(IMContextCanna* cn)
