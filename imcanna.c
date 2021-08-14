@@ -222,10 +222,12 @@ im_canna_init (GtkIMContext *im_context)
   cn->modewin = gtk_window_new(GTK_WINDOW_POPUP);
   cn->modelabel = gtk_label_new("");
   gtk_container_add(GTK_CONTAINER(cn->modewin), cn->modelabel);
-
+  cn->modebuf_utf8 = g_strdup("IM-CANNA3 is on now!!!");
+  
   im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
   im_canna_update_modewin(cn);
-
+  gtk_widget_show_all(cn->modewin);
+  
   cn->commit_str = NULL;
 }
 
@@ -627,13 +629,9 @@ im_canna_focus_in (GtkIMContext* context) {
     memset(cn->workbuf, 0, BUFSIZ);
     memset(cn->kakutei_buf, 0, BUFSIZ);
     g_signal_emit_by_name(cn, "preedit_changed");
-  }
-
-  im_canna_move_modewin(cn);
-  im_canna_update_modewin(cn);
-  
-  if (cn->modebuf_utf8 != NULL || cn->ja_input_mode == TRUE)
+    gtk_widget_show(cn->modelabel);
     gtk_widget_show(cn->modewin);
+  }
 }
 
 static void
@@ -641,9 +639,6 @@ im_canna_focus_out (GtkIMContext* context) {
   IMContextCanna* cn = IM_CONTEXT_CANNA(context);
 
   focused_context = NULL;
-
-  gtk_widget_hide(cn->candwin);
-  gtk_widget_hide(cn->modewin);
 }
 
 static void
