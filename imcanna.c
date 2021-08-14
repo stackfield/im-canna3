@@ -459,8 +459,10 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       g_free(utf8);
     }
 
-    if(*cn->ks.echoStr != '\0' || canna_code == 0x08)
-      g_signal_emit_by_name(cn, "preedit_changed");
+    if(cn->ks.echoStr != NULL) {
+      if(*cn->ks.echoStr != '\0' || canna_code == 0x08)
+	g_signal_emit_by_name(cn, "preedit_changed");
+    }
     
     mode = im_canna_get_num_of_canna_mode(cn);
     if(mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
