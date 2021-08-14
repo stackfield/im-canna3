@@ -102,9 +102,8 @@ im_canna_update_modewin(IMContextCanna* cn) {
     pango_attr_list_unref(attrs);
   }
 
-  im_canna_move_modewin(cn);
-
   gtk_window_resize (GTK_WINDOW(cn->modewin), 1, 1);
+  im_canna_move_modewin(cn);
   gtk_widget_show(cn->modelabel);
 }
 
