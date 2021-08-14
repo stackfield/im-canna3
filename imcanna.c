@@ -629,9 +629,10 @@ im_canna_focus_in (GtkIMContext* context) {
     g_signal_emit_by_name(cn, "preedit_changed");
   }
 
+  im_canna_move_modewin(cn);
   im_canna_update_modewin(cn);
   
-  if (cn->modebuf_utf8 != NULL)
+  if (cn->modebuf_utf8 != NULL || cn->ja_input_mode == TRUE)
     gtk_widget_show(cn->modewin);
 }
 
