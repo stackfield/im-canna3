@@ -119,9 +119,8 @@ void im_canna_move_modewin(IMContextCanna* cn)
   x = 0;
   y = screen_area.height;
   
-  width  = gtk_widget_get_allocated_width(cn->modewin);
-  height = gtk_widget_get_allocated_height(cn->modewin);
-  
+  gtk_window_get_size(GTK_WINDOW(cn->modewin), &width, &height);
+
   if (x + width >= screen_area.width)
     x = width - screen_area.width;
   

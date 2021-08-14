@@ -225,7 +225,6 @@ im_canna_init (GtkIMContext *im_context)
   
   im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
   im_canna_update_modewin(cn);
-  gtk_widget_show_all(cn->modewin);
   
   cn->commit_str = NULL;
 }
@@ -313,7 +312,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       g_signal_emit_by_name(cn, "preedit_start");
       handle_modebuf(cn);
       im_canna_update_modewin(cn);
-      gtk_widget_show(cn->modewin);
+      gtk_widget_show_all(cn->modewin);
     } else {
       im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       cn->ja_input_mode = FALSE;
