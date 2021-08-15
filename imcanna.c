@@ -40,7 +40,6 @@
 #include "handle_canna.h"
 
 #include "enc.h"
-#include "util.h"
 
 #ifdef BUFSIZ
 #undef BUFSIZ

@@ -132,8 +132,8 @@ am__installdirs = "$(DESTDIR)$(moduledir)"
 LTLIBRARIES = $(module_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 im_canna_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_im_canna_la_OBJECTS = imcanna.lo enc.lo util.lo handle_canna.lo \
-	keydefs.lo sub_function_mode.lo sub_cand_modewin.lo
+am_im_canna_la_OBJECTS = imcanna.lo enc.lo handle_canna.lo keydefs.lo \
+	sub_function_mode.lo sub_cand_modewin.lo
 im_canna_la_OBJECTS = $(am_im_canna_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -160,7 +160,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/enc.Plo ./$(DEPDIR)/handle_canna.Plo \
 	./$(DEPDIR)/imcanna.Plo ./$(DEPDIR)/keydefs.Plo \
 	./$(DEPDIR)/sub_cand_modewin.Plo \
-	./$(DEPDIR)/sub_function_mode.Plo ./$(DEPDIR)/util.Plo
+	./$(DEPDIR)/sub_function_mode.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -373,8 +373,6 @@ im_canna_la_SOURCES = \
 		imcanna.c \
 		enc.h \
 		enc.c \
-		util.h \
-		util.c \
 		handle_canna.h \
 		handle_canna.c \
 		keydefs.h \
@@ -494,7 +492,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keydefs.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_cand_modewin.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_function_mode.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/util.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -813,7 +810,6 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/keydefs.Plo
 	-rm -f ./$(DEPDIR)/sub_cand_modewin.Plo
 	-rm -f ./$(DEPDIR)/sub_function_mode.Plo
-	-rm -f ./$(DEPDIR)/util.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -867,7 +863,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/keydefs.Plo
 	-rm -f ./$(DEPDIR)/sub_cand_modewin.Plo
 	-rm -f ./$(DEPDIR)/sub_function_mode.Plo
-	-rm -f ./$(DEPDIR)/util.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

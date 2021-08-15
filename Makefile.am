@@ -20,8 +20,6 @@ im_canna_la_SOURCES = \
 		imcanna.c \
 		enc.h \
 		enc.c \
-		util.h \
-		util.c \
 		handle_canna.h \
 		handle_canna.c \
 		keydefs.h \
