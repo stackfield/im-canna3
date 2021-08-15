@@ -58,7 +58,6 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
 	  im_canna_force_change_mode(cn, CANNA_MODE_KigoMode);	  
 	} else if (omode >= CANNA_MODE_HexMode) {
 	  if (mode == CANNA_MODE_EmptyMode) {
-	    handle_modebuf(cn);
 	    im_canna_update_modewin(cn);
 	    gtk_widget_show_all(cn->modewin);
 	  }
@@ -69,14 +68,12 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
     if ((omode == CANNA_MODE_KigoMode && mode == CANNA_MODE_EmptyMode)
 	|| (omode >= CANNA_MODE_HexMode && mode == CANNA_MODE_EmptyMode)) {
       gtk_widget_hide(cn->candwin);
-      handle_modebuf(cn);
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     }
 
     if ((omode == CANNA_MODE_KigoMode || omode >= CANNA_MODE_HexMode)
 	&& (mode != CANNA_MODE_KigoMode || !(mode >= CANNA_MODE_HexMode))) {
-      handle_modebuf(cn);
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     }

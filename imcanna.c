@@ -129,7 +129,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   strncpy(cn->workbuf, cn->ks.echoStr, cn->kslength);
   g_signal_emit_by_name(cn, "preedit_changed");
 
-  handle_modebuf(cn);
   im_canna_update_modewin(cn);
   
   handle_gline(cn);
@@ -303,7 +302,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       memset(cn->kakutei_buf, 0, BUFSIZ);
       g_signal_emit_by_name(cn, "preedit_changed");
       g_signal_emit_by_name(cn, "preedit_start");
-      handle_modebuf(cn);
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     } else {
@@ -326,8 +324,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   if (mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
     return im_canna_function_mode(context, key);
   } else {  
-  handle_modebuf(cn);
-  im_canna_update_modewin(cn);
+    im_canna_update_modewin(cn);
   }
   
   /* English mode */
