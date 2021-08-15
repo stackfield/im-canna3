@@ -99,7 +99,7 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
   } else {
     canna_code = get_canna_keysym(nkey.keyval, nkey.state);
   }
-#if 0
+
   if( canna_code != 0 ) {
     memset(cn->kakutei_buf, 0, BUFSIZ);
     jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
@@ -141,7 +141,7 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 
     return TRUE;
   }
-#endif
+
   /* Pass char to Canna, anyway */  
   if(roma2kana_canna(context, nkey.keyval) ) {
     if (cn->commit_str != NULL) {
