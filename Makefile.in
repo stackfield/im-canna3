@@ -132,8 +132,8 @@ am__installdirs = "$(DESTDIR)$(moduledir)"
 LTLIBRARIES = $(module_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 im_canna_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_im_canna_la_OBJECTS = imcanna.lo imsss.lo furigana.lo chartype.lo \
-	enc.lo util.lo handle_canna.lo keydefs.lo sub_function_mode.lo \
+am_im_canna_la_OBJECTS = imcanna.lo chartype.lo enc.lo util.lo \
+	handle_canna.lo keydefs.lo sub_function_mode.lo \
 	sub_cand_modewin.lo
 im_canna_la_OBJECTS = $(am_im_canna_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -159,8 +159,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/chartype.Plo ./$(DEPDIR)/enc.Plo \
-	./$(DEPDIR)/furigana.Plo ./$(DEPDIR)/handle_canna.Plo \
-	./$(DEPDIR)/imcanna.Plo ./$(DEPDIR)/imsss.Plo \
+	./$(DEPDIR)/handle_canna.Plo ./$(DEPDIR)/imcanna.Plo \
 	./$(DEPDIR)/keydefs.Plo ./$(DEPDIR)/sub_cand_modewin.Plo \
 	./$(DEPDIR)/sub_function_mode.Plo ./$(DEPDIR)/util.Plo
 am__mv = mv -f
@@ -373,10 +372,6 @@ LDADDS = @GTK_DEP_LIBS@ -lcanna
 im_canna_la_LDFLAGS = -rpath $(moduledir) -avoid-version -module $(no_undefined)
 im_canna_la_SOURCES = \
 		imcanna.c \
-		imsss.c \
-		imsss.h \
-		furigana.h \
-		furigana.c \
 		chartype.h \
 		chartype.c \
 		enc.h \
@@ -498,10 +493,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chartype.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/enc.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/furigana.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/handle_canna.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imcanna.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imsss.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keydefs.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_cand_modewin.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_function_mode.Plo@am__quote@ # am--include-marker
@@ -820,10 +813,8 @@ distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/chartype.Plo
 	-rm -f ./$(DEPDIR)/enc.Plo
-	-rm -f ./$(DEPDIR)/furigana.Plo
 	-rm -f ./$(DEPDIR)/handle_canna.Plo
 	-rm -f ./$(DEPDIR)/imcanna.Plo
-	-rm -f ./$(DEPDIR)/imsss.Plo
 	-rm -f ./$(DEPDIR)/keydefs.Plo
 	-rm -f ./$(DEPDIR)/sub_cand_modewin.Plo
 	-rm -f ./$(DEPDIR)/sub_function_mode.Plo
@@ -877,10 +868,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/chartype.Plo
 	-rm -f ./$(DEPDIR)/enc.Plo
-	-rm -f ./$(DEPDIR)/furigana.Plo
 	-rm -f ./$(DEPDIR)/handle_canna.Plo
 	-rm -f ./$(DEPDIR)/imcanna.Plo
-	-rm -f ./$(DEPDIR)/imsss.Plo
 	-rm -f ./$(DEPDIR)/keydefs.Plo
 	-rm -f ./$(DEPDIR)/sub_cand_modewin.Plo
 	-rm -f ./$(DEPDIR)/sub_function_mode.Plo

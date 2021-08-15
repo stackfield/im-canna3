@@ -3,12 +3,6 @@
 
 #include "im-canna-intl.h"
 #include "enc.h"
-#include "imsss.h"
-
-/* [ ¤¢ ] */
-#define CANNA_MODESTR_NORMAL "\x5b\x20\xa4\xa2\x20\x5d"
-/* [³ÈÄ¥] */
-#define CANNA_MODESTR_EXTENDED "\x5b\xb3\xc8\xc4\xa5\x5d"
 
 #include "handle_canna.h"
 
@@ -18,27 +12,7 @@ void im_canna_force_change_mode(IMContextCanna* cn, int mode);
 void handle_modebuf (IMContextCanna* cn) {
   int len = 0;
   gchar* modebuf = NULL;
-  gboolean imsss_ret;
-  /*  
-  if( cn->ja_input_mode == FALSE) {
-    imsss_set_status(IMSSS_STATUS_NONE);
-    return;
-  } else {
-    len = jrKanjiControl(cn->canna_context, KC_QUERYMAXMODESTR, 0);
-    modebuf = g_new0(gchar, len+1);
-    jrKanjiControl(cn->canna_context, KC_QUERYMODE, modebuf);
-    
-    if( !strcmp(modebuf, CANNA_MODESTR_NORMAL) ) {
-      imsss_ret = imsss_set_status(IMSSS_STATUS_KANA);
-    } else {
-      imsss_ret = imsss_set_status(IMSSS_STATUS_KANJI);
-    }
-    if( imsss_ret ) {
-      g_free(modebuf);
-      return;
-    }
-  }
-  */
+
   len = jrKanjiControl(cn->canna_context, KC_QUERYMAXMODESTR, 0);
   modebuf = g_new0(gchar, len+1);
   jrKanjiControl(cn->canna_context, KC_QUERYMODE, modebuf);

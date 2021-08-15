@@ -18,10 +18,6 @@ im_canna_la_LDFLAGS = -rpath $(moduledir) -avoid-version -module $(no_undefined)
 
 im_canna_la_SOURCES = \
 		imcanna.c \
-		imsss.c \
-		imsss.h \
-		furigana.h \
-		furigana.c \
 		chartype.h \
 		chartype.c \
 		enc.h \

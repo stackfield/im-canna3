@@ -47,9 +47,6 @@
 #define BUFSIZ 1024
 #endif
 
-#include "furigana.h"
-#include "imsss.h"
-
 GType type_canna = 0;
 
 /*
@@ -72,8 +69,6 @@ static void im_canna_set_client_window(GtkIMContext* context, GdkWindow *win);
 static void im_canna_set_cursor_location (GtkIMContext *context,
 					  GdkRectangle *area);
 static void im_canna_reset(GtkIMContext* context);
-static gboolean return_false(GtkIMContext* context, GdkEventKey* key);
-static void im_canna_kill(IMContextCanna* cn);
 
 static guint focus_id = 0;
 
@@ -420,16 +415,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
 
   switch(key->keyval) {
   case GDK_Return:    
-    if( !gtk_widget_get_visible(cn->candwin) ) {
-      /*
-       * Disable Furigana support code because it doesn't make sense
-       * when kakutei-if-end-of-bunsetsu is set as 't' in ~/.canna
-       * 
-       */
-#if 0
-      im_canna_get_furigana(cn);
-#endif      
-    }
     break;
   default:
     if (im_canna_is_key_of_no_use_in_canna(key))
@@ -678,13 +663,6 @@ im_canna_set_cursor_location (GtkIMContext *context, GdkRectangle *area)
 		  cn->candwin_area.y);
 }
 
-/*
-static gboolean
-return_false(GtkIMContext* context, GdkEventKey* key) {
-  return FALSE;
-}
-*/
-
 /* im_canna_reset() commit all preedit string and clear the buffers.
    It should not reset input mode.
 
@@ -716,51 +694,3 @@ im_canna_reset(GtkIMContext* context) {
   g_signal_emit_by_name(cn, "preedit_changed");
 }
 
-/* im_canna_kakutei() just do kakutei, commit and flush.
- * This works for generic canna usage, but doesn't for furigana support.
- */
-static void
-im_canna_kakutei(IMContextCanna* cn) {
-  jrKanjiStatusWithValue ksv;
-  guchar buf[BUFSIZ];
-  int len = 0;
-  gchar* utf8 = NULL;
-
-  ksv.ks = &cn->ks;
-  ksv.buffer = buf;
-  ksv.bytes_buffer = BUFSIZ;
-
-  len = jrKanjiControl(cn->canna_context, KC_KAKUTEI, (void*)&ksv);
-  utf8 = euc2utf8(buf);
-
-  g_free(cn->commit_str);
-  cn->commit_str = g_strdup(utf8);
-  
-  memset(cn->workbuf, 0, BUFSIZ);
-  memset(cn->kakutei_buf, 0, BUFSIZ);
-  g_signal_emit_by_name(cn, "preedit_changed");
-
-  g_free(utf8);
-}
-
-static void im_canna_kill(IMContextCanna* cn) {
-  jrKanjiStatusWithValue ksv;
-  guchar buf[BUFSIZ];
-  int len = 0;
-  gchar* utf8 = NULL;
-    
-  ksv.ks = &cn->ks;
-  ksv.buffer = buf;
-  ksv.bytes_buffer = BUFSIZ;
-    
-  len = jrKanjiControl(cn->canna_context, KC_KILL, (void*)&ksv);
-  utf8 = euc2utf8(buf);
-  
-  memset(cn->workbuf, 0, BUFSIZ);
-  memset(cn->kakutei_buf, 0, BUFSIZ);
-  g_signal_emit_by_name(cn, "preedit_changed");
-
-  jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
-
-  g_free(utf8);
-}
