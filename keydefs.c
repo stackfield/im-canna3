@@ -2,6 +2,7 @@
 
 gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key);
 gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key);
+gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key) ;
 
 guint get_canna_keysym(guint keyval, guint state);
 gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key);
@@ -114,6 +115,24 @@ gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key) {
     return TRUE;
   }
   /* or should be customizable with dialog */
+
+  return FALSE;
+}
+
+gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key)
+{
+  /* default */
+  if( key->keyval == GDK_Return )
+    return TRUE;
+
+  /* Emacs Like */
+  if( key->state & GDK_CONTROL_MASK )
+    switch (key->keyval) {
+    case GDK_m:
+    case GDK_j:
+      return TRUE;
+      break;
+    }
 
   return FALSE;
 }

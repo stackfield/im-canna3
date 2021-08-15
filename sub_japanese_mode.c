@@ -51,17 +51,14 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   guchar canna_code = 0;
+  GdkEventKey nkey = *key;
   
   /* No preedit char yet */
   if( cn->kslength == 0 ) {
-    gchar ubuf[7];
-    gunichar keyinput;
-    memset(ubuf, 0, 7);
-
-    if( im_canna_is_key_of_emacs_like_bindkey(key) == TRUE )
+    if( im_canna_is_key_of_emacs_like_bindkey(&nkey) == TRUE )
       return FALSE;
     
-    switch(key->keyval) {
+    switch(nkey.keyval) {
       /*
 	case GDK_space:
 	g_signal_emit_by_name(cn, "commit", " ");
@@ -94,17 +91,15 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 
   canna_code = 0;
 
-  switch(key->keyval) {
-  case GDK_Return:    
-    break;
-  default:
-    if (im_canna_is_key_of_no_use_in_canna(key))
-      return FALSE;
-    else
-      canna_code = get_canna_keysym(key->keyval, key->state);
-    break;
-  }
+  if (im_canna_is_key_of_no_use_in_canna(&nkey))
+    return FALSE;
   
+  if (im_canna_is_key_kind_of_enter(&nkey)) {
+    nkey.keyval = GDK_Return;
+  } else {
+    canna_code = get_canna_keysym(nkey.keyval, nkey.state);
+  }
+#if 0
   if( canna_code != 0 ) {
     memset(cn->kakutei_buf, 0, BUFSIZ);
     jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
@@ -146,9 +141,9 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 
     return TRUE;
   }
-
+#endif
   /* Pass char to Canna, anyway */  
-  if(roma2kana_canna(context, key->keyval) ) {
+  if(roma2kana_canna(context, nkey.keyval) ) {
     if (cn->commit_str != NULL) {
       g_signal_emit_by_name(cn, "commit", cn->commit_str);
       g_free(cn->commit_str);
