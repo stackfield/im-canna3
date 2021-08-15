@@ -257,7 +257,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   
   /* Editable widget should pass mnemonic if ja-input-mode is on */
   g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
-      (gpointer)cn->ja_input_mode);
+		    (gpointer)cn->ja_input_mode);
   
   if (im_canna_is_modechangekey(context, key)) {
     if( cn->ja_input_mode == FALSE ) {
@@ -297,16 +297,19 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   ret = im_canna_enter_japanese_mode(context, key);
 
   /*** update cardwin & modewin ***/
-  mode = im_canna_get_num_of_canna_mode(cn);
-  if(mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
-    handle_gline(cn);
-    im_canna_update_candwin(cn);
-    gtk_widget_hide(cn->modewin);
-    gtk_widget_show_all(cn->candwin);
-  } else {
-    gtk_widget_show_all(cn->modewin);
+  if( ret == TRUE ) {
+    mode = im_canna_get_num_of_canna_mode(cn);
+    if( mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode ) {
+      handle_gline(cn);
+      im_canna_update_candwin(cn);
+      gtk_widget_hide(cn->modewin);
+      gtk_widget_show(cn->candwin);
+    } else {
+      im_canna_update_modewin(cn);
+      gtk_widget_show(cn->modewin);
+    }
   }
-
+  
   return ret;
 }
 
