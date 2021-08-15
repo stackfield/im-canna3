@@ -26,6 +26,7 @@ im_canna_la_SOURCES = \
 		keydefs.c \
 		sub_function_mode.c \
 		sub_direct_mode.c \
+		sub_japanese_mode.c \
 		sub_modewin.c \
 		sub_candwin.c \
 		im-canna-intl.h
