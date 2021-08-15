@@ -79,9 +79,9 @@ extern void im_canna_update_candwin(IMContextCanna* cn);
 extern void im_canna_update_modewin(IMContextCanna* cn);
 
 /* sub_modewin.c */
-void im_canna_create_modewin(IMContextCanna* cn);
-void im_canna_update_modewin(IMContextCanna* cn);
-void im_canna_move_modewin(IMContextCanna* cn);
+extern void im_canna_create_modewin(IMContextCanna* cn);
+extern void im_canna_update_modewin(IMContextCanna* cn);
+extern void im_canna_move_modewin(IMContextCanna* cn);
 
 static void
 scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
