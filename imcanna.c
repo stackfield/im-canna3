@@ -74,9 +74,11 @@ static guint focus_id = 0;
 /* sub_function_mode.c */
 extern gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key);
 
-/* sub_cand_modewin.c */
+/* sub_candwin.c */
 extern void im_canna_update_candwin(IMContextCanna* cn);
 extern void im_canna_update_modewin(IMContextCanna* cn);
+
+/* sub_modewin.c */
 extern void im_canna_move_modewin(IMContextCanna* cn);
 
 static void

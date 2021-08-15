@@ -25,7 +25,8 @@ im_canna_la_SOURCES = \
 		keydefs.h \
 		keydefs.c \
 		sub_function_mode.c \
-		sub_cand_modewin.c \
+		sub_modewin.c \
+		sub_candwin.c \
 		im-canna-intl.h
 
 im_canna_la_LIBADD = $(LDADDS)

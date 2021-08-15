@@ -133,7 +133,7 @@ LTLIBRARIES = $(module_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 im_canna_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_im_canna_la_OBJECTS = imcanna.lo enc.lo handle_canna.lo keydefs.lo \
-	sub_function_mode.lo sub_cand_modewin.lo
+	sub_function_mode.lo sub_modewin.lo sub_candwin.lo
 im_canna_la_OBJECTS = $(am_im_canna_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -159,8 +159,8 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/enc.Plo ./$(DEPDIR)/handle_canna.Plo \
 	./$(DEPDIR)/imcanna.Plo ./$(DEPDIR)/keydefs.Plo \
-	./$(DEPDIR)/sub_cand_modewin.Plo \
-	./$(DEPDIR)/sub_function_mode.Plo
+	./$(DEPDIR)/sub_candwin.Plo ./$(DEPDIR)/sub_function_mode.Plo \
+	./$(DEPDIR)/sub_modewin.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -378,7 +378,8 @@ im_canna_la_SOURCES = \
 		keydefs.h \
 		keydefs.c \
 		sub_function_mode.c \
-		sub_cand_modewin.c \
+		sub_modewin.c \
+		sub_candwin.c \
 		im-canna-intl.h
 
 im_canna_la_LIBADD = $(LDADDS)
@@ -490,8 +491,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/handle_canna.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imcanna.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keydefs.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_cand_modewin.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_candwin.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_function_mode.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sub_modewin.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -808,8 +810,9 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/handle_canna.Plo
 	-rm -f ./$(DEPDIR)/imcanna.Plo
 	-rm -f ./$(DEPDIR)/keydefs.Plo
-	-rm -f ./$(DEPDIR)/sub_cand_modewin.Plo
+	-rm -f ./$(DEPDIR)/sub_candwin.Plo
 	-rm -f ./$(DEPDIR)/sub_function_mode.Plo
+	-rm -f ./$(DEPDIR)/sub_modewin.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -861,8 +864,9 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/handle_canna.Plo
 	-rm -f ./$(DEPDIR)/imcanna.Plo
 	-rm -f ./$(DEPDIR)/keydefs.Plo
-	-rm -f ./$(DEPDIR)/sub_cand_modewin.Plo
+	-rm -f ./$(DEPDIR)/sub_candwin.Plo
 	-rm -f ./$(DEPDIR)/sub_function_mode.Plo
+	-rm -f ./$(DEPDIR)/sub_modewin.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
