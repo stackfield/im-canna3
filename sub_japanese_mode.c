@@ -42,14 +42,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   memset(cn->workbuf, 0, BUFSIZ);
   strncpy(cn->workbuf, cn->ks.echoStr, cn->kslength);
   g_signal_emit_by_name(cn, "preedit_changed");
-
-  im_canna_update_modewin(cn);
-  
-  handle_gline(cn);
-
-  if(cn->gline_length > 0) {
-    im_canna_update_candwin(cn);
-  }
   
   return TRUE;
 }
