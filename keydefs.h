@@ -24,8 +24,6 @@ static struct _gdk2canna_keytable {
   { MASK_CONTROL,  GDK_h, 0x08 },
   { MASK_CONTROL,  GDK_u, 0x15 },
   { MASK_CONTROL,  GDK_l, 0x0c },
-  { MASK_CONTROL,  GDK_m, 0x0d },
-  { MASK_CONTROL,  GDK_j, 0x0a }, /* Not supported yet */
   { MASK_CONTROL,  GDK_k, 0x0b },
   { MASK_CONTROL,  GDK_d, 0x04 },
   { MASK_CONTROL,  GDK_o, 0x0f },
@@ -57,6 +55,7 @@ static struct _gdk2canna_keytable {
 
   { MASK_NONE, 0, 0 },
 };
+
 extern gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key);
 extern gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key);
 extern gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key);

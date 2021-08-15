@@ -133,6 +133,6 @@ gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key)
       return TRUE;
       break;
     }
-
+ 
   return FALSE;
 }
