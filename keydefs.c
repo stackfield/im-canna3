@@ -1,8 +1,30 @@
 #include "keydefs.h"
 
 gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key);
+gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key);
+
 guint get_canna_keysym(guint keyval, guint state);
 gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key);
+
+gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key)
+{
+  if( key->state & GDK_CONTROL_MASK ) {
+    switch(key->keyval) {
+    case GDK_a:
+    case GDK_b:
+    case GDK_f:
+    case GDK_e:
+    case GDK_n:
+    case GDK_p:
+    case GDK_o:
+    case GDK_h:
+      return TRUE;
+      break;
+    }
+  }
+
+  return FALSE;
+}
 
 gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key)
 {

@@ -358,22 +358,8 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     gunichar keyinput;
     memset(ubuf, 0, 7);
 
-    if( key->state & GDK_CONTROL_MASK ) {
-      switch(key->keyval) {
-      case GDK_a:
-      case GDK_b:
-      case GDK_f:
-      case GDK_e:
-      case GDK_n:
-      case GDK_p:
-      case GDK_o:
-      case GDK_h:
-        return FALSE;
-        break;
-      default:
-        break;
-      }
-    }
+    if( im_canna_is_key_of_emacs_like_bindkey(key) == TRUE )
+      return FALSE;
     
     switch(key->keyval) {
       /*
