@@ -83,6 +83,10 @@ extern void im_canna_create_modewin(IMContextCanna* cn);
 extern void im_canna_update_modewin(IMContextCanna* cn);
 extern void im_canna_move_modewin(IMContextCanna* cn);
 
+/* sub_direct_mode.c */
+extern gboolean
+im_canna_enter_direct_mode(GtkIMContext *context, GdkEventKey *key);
+
 static void
 scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
   switch(event->direction) {
@@ -326,31 +330,11 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   } else {  
     im_canna_update_modewin(cn);
   }
+
+  /*** direct mode ***/
+  if( cn->ja_input_mode == FALSE )
+    return im_canna_enter_direct_mode(context, key);
   
-  /* English mode */
-  if( cn->ja_input_mode == FALSE ) {
-    gunichar keyinput = gdk_keyval_to_unicode(key->keyval);
-    gchar ubuf[7];
-
-    gtk_widget_hide(cn->modewin);
-    
-    if( key->state & GDK_CONTROL_MASK )
-      return FALSE;
-
-    if( key->keyval == 0 )
-      return FALSE;
-
-    if( !g_unichar_isprint(keyinput) ) {
-      return FALSE;
-    }
-
-    /* For real char keys */
-    memset(ubuf, 0, 7);
-    g_unichar_to_utf8(keyinput, ubuf);
-    g_signal_emit_by_name(cn, "commit", ubuf);
-    return TRUE;
-  }
-
   /*** Japanese mode ***/
   /* No preedit char yet */
   if( cn->kslength == 0 ) {
