@@ -79,7 +79,9 @@ extern void im_canna_update_candwin(IMContextCanna* cn);
 extern void im_canna_update_modewin(IMContextCanna* cn);
 
 /* sub_modewin.c */
-extern void im_canna_move_modewin(IMContextCanna* cn);
+void im_canna_create_modewin(IMContextCanna* cn);
+void im_canna_update_modewin(IMContextCanna* cn);
+void im_canna_move_modewin(IMContextCanna* cn);
 
 static void
 scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
@@ -215,14 +217,9 @@ im_canna_init (GtkIMContext *im_context)
   cn->client_window = NULL;
   cn->focus_in_candwin_show = FALSE;
   cn->ja_input_mode = FALSE;
-  cn->modewin = gtk_window_new(GTK_WINDOW_POPUP);
-  cn->modelabel = gtk_label_new("");
-  gtk_container_add(GTK_CONTAINER(cn->modewin), cn->modelabel);
-  
-  im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
-  im_canna_update_modewin(cn);
-  
   cn->commit_str = NULL;
+
+  im_canna_create_modewin(cn);
 }
 
 static void
