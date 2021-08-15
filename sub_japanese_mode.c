@@ -58,7 +58,6 @@ gboolean
 im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
-  int mode = -1;
   guchar canna_code = 0;
   
   /* No preedit char yet */
@@ -139,16 +138,6 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 	g_signal_emit_by_name(cn, "preedit_changed");
     }
     
-    mode = im_canna_get_num_of_canna_mode(cn);
-    if(mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
-      handle_gline(cn);
-      im_canna_update_candwin(cn);
-      gtk_widget_hide(cn->modewin);
-      gtk_widget_show_all(cn->candwin);
-    } else {
-      gtk_widget_show_all(cn->modewin);
-    }
-
     /*
 
       Dirty Hack for pre-52 firefox.
@@ -172,17 +161,7 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
       g_signal_emit_by_name(cn, "commit", cn->commit_str);
       g_free(cn->commit_str);
       cn->commit_str = NULL;
-    }
-    
-    mode = im_canna_get_num_of_canna_mode(cn);
-    if(mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
-      handle_gline(cn);
-      im_canna_update_candwin(cn);
-      gtk_widget_hide(cn->modewin);
-      gtk_widget_show_all(cn->candwin);
-    } else {
-      gtk_widget_show_all(cn->modewin);
-    }
+    }    
     return TRUE;
   }
   return FALSE;

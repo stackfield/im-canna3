@@ -248,6 +248,7 @@ gboolean
 im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
+  gboolean ret = FALSE;
   int mode = -1;
 
   if( key->type == GDK_KEY_RELEASE ) {
@@ -286,8 +287,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   mode = im_canna_get_num_of_canna_mode(cn);
   if (mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
     return im_canna_function_mode(context, key);
-  } else {  
-    im_canna_update_modewin(cn);
   }
 
   /*** direct mode ***/
@@ -295,7 +294,20 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     return im_canna_enter_direct_mode(context, key);
   
   /*** Japanese mode ***/
-  return im_canna_enter_japanese_mode(context, key);
+  ret = im_canna_enter_japanese_mode(context, key);
+
+  /*** update cardwin & modewin ***/
+  mode = im_canna_get_num_of_canna_mode(cn);
+  if(mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
+    handle_gline(cn);
+    im_canna_update_candwin(cn);
+    gtk_widget_hide(cn->modewin);
+    gtk_widget_show_all(cn->candwin);
+  } else {
+    gtk_widget_show_all(cn->modewin);
+  }
+
+  return ret;
 }
 
 void
