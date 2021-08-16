@@ -144,3 +144,26 @@ gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key)
   
   return FALSE;
 }
+
+gboolean im_canna_is_key_need_pass_in_no_preedit (GdkEventKey *key)
+{
+  switch(key->keyval) {
+  case GDK_Return:
+  case GDK_BackSpace:
+  case GDK_Left:
+  case GDK_Up:
+  case GDK_Right:
+  case GDK_Down:
+  case GDK_Page_Up:
+  case GDK_Page_Down:
+  case GDK_End:
+  case GDK_Insert:
+  case GDK_Delete:
+  case GDK_Shift_L:
+  case GDK_Shift_R:
+    return TRUE; /* Functions key handling depends on afterward codes */
+    break;
+  }
+
+  return FALSE;
+}
