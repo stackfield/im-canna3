@@ -33,10 +33,10 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
     gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
     gchar* utf8 = euc2utf8(euc);
-      g_free(cn->commit_str);
-      cn->commit_str = g_strdup(utf8);
-      g_free(utf8);
-      g_free(euc);
+    g_free(cn->commit_str);
+    cn->commit_str = g_strdup(utf8);
+    g_free(utf8);
+    g_free(euc);
   }
   
   memset(cn->workbuf, 0, BUFSIZ);
@@ -51,14 +51,13 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   guchar canna_code = 0;
-  GdkEventKey nkey = *key;
   
   /* No preedit char yet */
   if( cn->kslength == 0 ) {
-    if( im_canna_is_key_of_emacs_like_bindkey(&nkey) == TRUE )
+    if( im_canna_is_key_of_emacs_like_bindkey(key) == TRUE )
       return FALSE;
     
-    switch(nkey.keyval) {
+    switch(key->keyval) {
       /*
 	case GDK_space:
 	g_signal_emit_by_name(cn, "commit", " ");
@@ -89,48 +88,60 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
     }
   }
 
-  canna_code = 0;
-
-  if (im_canna_is_key_of_no_use_in_canna(&nkey))
+  if (im_canna_is_key_of_no_use_in_canna(key))
     return FALSE;
   
-  if (im_canna_is_key_kind_of_enter(&nkey)) {
-    nkey.keyval = GDK_Return;
-  } else {
-    canna_code = get_canna_keysym(nkey.keyval, nkey.state);
-  }
-
+  canna_code = get_canna_keysym(key->keyval, key->state);
+  
   if( canna_code != 0 ) {
+    gint nbytes;
+	
     memset(cn->kakutei_buf, 0, BUFSIZ);
-    jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
+
     if( cn->ks.length != -1 )
       cn->kslength = cn->ks.length;
     if( strlen(cn->kakutei_buf) == 1 && cn->kakutei_buf[0] == canna_code ) {
       cn->kakutei_buf[0] = '\0';
     }
 
+    /* for committing string written in front of cursor (e.g. Ctrl-J), */
+    /* and kakutei_key (e.g. Ctrl-M and Enter Key).
     /* NAKAI */
-    if( *cn->kakutei_buf != '\0' ) {
-      gchar* utf8 = euc2utf8(cn->kakutei_buf);
-      g_free(cn->commit_str);
-      cn->commit_str = g_strdup(utf8);
+    if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
+      gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
+      gchar* utf8 = euc2utf8(euc);
+
       memset(cn->kakutei_buf, 0, BUFSIZ);
       memset(cn->workbuf, 0, BUFSIZ);
-      cn->kslength = 0;
-      g_free(utf8);
-    }
 
+      g_signal_emit_by_name(cn, "preedit_changed");
+      
+      g_free(cn->commit_str);
+      cn->commit_str = g_strdup(utf8);
+      g_free(utf8);
+      g_free(euc);
+      
+      g_signal_emit_by_name(cn, "commit", cn->commit_str);
+      g_free(cn->commit_str);
+      cn->commit_str = NULL;
+
+      g_signal_emit_by_name(cn, "preedit_changed");
+      strncpy(cn->workbuf, cn->ks.echoStr, cn->kslength);
+      return TRUE;
+    }
+  
     if(cn->ks.echoStr != NULL) {
       if(*cn->ks.echoStr != '\0' || canna_code == 0x08)
 	g_signal_emit_by_name(cn, "preedit_changed");
     }
-    
+  
     /*
 
       Dirty Hack for pre-52 firefox.
       if a user uses backspace or Ctrl-h(Emacs Keybind) to clear a preedit,
       firefox can't handle next backspace key.
-
+      
     */
 #ifdef USE_HACK_FOR_FIREFOX52
     if(cn->kslength == 0 && canna_code == 0x08) {
@@ -141,9 +152,9 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 
     return TRUE;
   }
-
+  
   /* Pass char to Canna, anyway */  
-  if(roma2kana_canna(context, nkey.keyval) ) {
+  if(roma2kana_canna(context, key->keyval) ) {
     if (cn->commit_str != NULL) {
       g_signal_emit_by_name(cn, "commit", cn->commit_str);
       g_free(cn->commit_str);

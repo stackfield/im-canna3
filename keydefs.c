@@ -138,10 +138,9 @@ gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key)
   if( key->state & GDK_CONTROL_MASK )
     switch (key->keyval) {
     case GDK_m:
-    case GDK_j:
       return TRUE;
       break;
     }
- 
+  
   return FALSE;
 }
