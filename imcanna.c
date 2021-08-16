@@ -263,7 +263,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     if( cn->ja_input_mode == FALSE ) {
       im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       cn->ja_input_mode = TRUE;
-      memset(cn->kakutei_buf, 0, BUFSIZ);
       g_signal_emit_by_name(cn, "preedit_changed");
       g_signal_emit_by_name(cn, "preedit_start");
       im_canna_update_modewin(cn);
@@ -272,7 +271,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       cn->ja_input_mode = FALSE;
       gtk_widget_hide(cn->candwin);
-      memset(cn->kakutei_buf, 0, BUFSIZ);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
       g_signal_emit_by_name(cn, "preedit_changed");
@@ -423,7 +421,6 @@ im_canna_focus_in (GtkIMContext* context) {
   if (cn->ja_input_mode == TRUE) {
     im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
     im_canna_update_modewin(cn);
-    memset(cn->kakutei_buf, 0, BUFSIZ);
     g_signal_emit_by_name(cn, "preedit_changed");
     gtk_widget_show(cn->modelabel);
     gtk_widget_show(cn->modewin);

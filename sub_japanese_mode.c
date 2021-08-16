@@ -17,10 +17,7 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
 
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
 
-  if( cn->kslength == 0 ) {
-    bzero(cn->kakutei_buf, sizeof(cn->kakutei_buf));
-  }
-
+  memset(cn->kakutei_buf, 0, BUFSIZ);
   nbytes = jrKanjiString(cn->canna_context, newinput, cn->kakutei_buf, BUFSIZ, &cn->ks);
 
   if( cn->ks.length == -1 ) {
@@ -108,8 +105,6 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
     if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
       gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
       gchar* utf8 = euc2utf8(euc);
-
-      memset(cn->kakutei_buf, 0, BUFSIZ);
 
       g_signal_emit_by_name(cn, "preedit_changed");
       
