@@ -21,20 +21,16 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
 
   gtk_widget_show_all (cn->candwin);
   
-  switch (key->keyval) {
-  case GDK_Return:
-    break;
-  case GDK_Escape:
-    break;
-  case GDK_g:
-    break;
-  default:
-    if (im_canna_is_key_of_no_use_in_canna(key))
-      return FALSE;
-  }
+  if (im_canna_is_key_of_no_use_in_canna(key))
+    return FALSE;
 
   omode = im_canna_get_num_of_canna_mode(cn);
-  canna_code = get_canna_keysym(key->keyval, key->state);
+
+  if (im_canna_is_key_kind_of_enter(key)) {
+    canna_code = GDK_Return;
+  } else {
+    canna_code = get_canna_keysym(key->keyval, key->state);
+  }
 
   if (canna_code != 0) {
     gint nbytes;
@@ -55,7 +51,7 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
 	if (omode == CANNA_MODE_KigoMode) {
 	  g_free(cn->gline_message);
 	  cn->gline_message = back_gline_message;
-	  im_canna_force_change_mode(cn, CANNA_MODE_KigoMode);	  
+	  im_canna_force_change_mode(cn, CANNA_MODE_KigoMode);
 	} else if (omode >= CANNA_MODE_HexMode) {
 	  if (mode == CANNA_MODE_EmptyMode) {
 	    im_canna_update_modewin(cn);
