@@ -40,6 +40,65 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   return TRUE;
 }
 
+static gboolean
+im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna_code)
+{
+  IMContextCanna *cn = IM_CONTEXT_CANNA(context);
+  gint nbytes;
+	
+  memset(cn->kakutei_buf, 0, BUFSIZ);
+  nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
+
+  if( cn->ks.length != -1 )
+    cn->kslength = cn->ks.length;
+  if( strlen(cn->kakutei_buf) == 1 && cn->kakutei_buf[0] == canna_code ) {
+    cn->kakutei_buf[0] = '\0';
+  }
+
+  /* for committing string written in front of cursor (e.g. Ctrl-J), */
+  /* and kakutei_key (e.g. Ctrl-M and Enter Key). */
+  /* NAKAI */
+  if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
+    gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
+    gchar* utf8 = euc2utf8(euc);
+
+    g_signal_emit_by_name(cn, "preedit_changed");
+      
+    g_free(cn->commit_str);
+    cn->commit_str = g_strdup(utf8);
+    g_free(utf8);
+    g_free(euc);
+	
+    g_signal_emit_by_name(cn, "commit", cn->commit_str);
+    g_free(cn->commit_str);
+    cn->commit_str = NULL;
+	
+    g_signal_emit_by_name(cn, "preedit_changed");
+    return TRUE;
+  }
+
+  if(cn->ks.echoStr != NULL) {
+    if(*cn->ks.echoStr != '\0' || canna_code == 0x08)
+      g_signal_emit_by_name(cn, "preedit_changed");
+  }
+
+  /*
+
+    Dirty Hack for pre-52 firefox.
+    if a user uses backspace or Ctrl-h(Emacs Keybind) to clear a preedit,
+    firefox can't handle next backspace key.
+
+  */
+#ifdef USE_HACK_FOR_FIREFOX52
+  if(cn->kslength == 0 && canna_code == 0x08) {
+    g_signal_emit_by_name(cn, "commit", "A"); /* dummy */
+    return FALSE;
+  }
+#endif
+
+  return TRUE;
+}
+
 gboolean
 im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 {
@@ -58,66 +117,18 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
     return FALSE;
   
   canna_code = get_canna_keysym(key->keyval, key->state);
-    
+
   if( canna_code != 0 ) {
-    gint nbytes;
-	
-    memset(cn->kakutei_buf, 0, BUFSIZ);
-    nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
-
-    if( cn->ks.length != -1 )
-      cn->kslength = cn->ks.length;
-    if( strlen(cn->kakutei_buf) == 1 && cn->kakutei_buf[0] == canna_code ) {
-      cn->kakutei_buf[0] = '\0';
-    }
-
-    /* for committing string written in front of cursor (e.g. Ctrl-J), */
-    /* and kakutei_key (e.g. Ctrl-M and Enter Key). */
-    /* NAKAI */
-    if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
-      gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
-      gchar* utf8 = euc2utf8(euc);
-
-      g_signal_emit_by_name(cn, "preedit_changed");
-      
-      g_free(cn->commit_str);
-      cn->commit_str = g_strdup(utf8);
-      g_free(utf8);
-      g_free(euc);
-	
-      g_signal_emit_by_name(cn, "commit", cn->commit_str);
-      g_free(cn->commit_str);
-      cn->commit_str = NULL;
-	
-      g_signal_emit_by_name(cn, "preedit_changed");
-      return TRUE;
-    }
-
-    if(cn->ks.echoStr != NULL) {
-      if(*cn->ks.echoStr != '\0' || canna_code == 0x08)
-	g_signal_emit_by_name(cn, "preedit_changed");
-    }
+    gboolean ret;
+    
+    ret = im_canna_handle_special_key_in_japanese_mode(context, canna_code);
 
     if( key->keyval == GDK_Home ) {
       im_canna_update_candwin(cn);
-      gtk_widget_show_all(cn->candwin);
+      gtk_widget_show(cn->candwin);
     }
-
-    /*
-
-      Dirty Hack for pre-52 firefox.
-      if a user uses backspace or Ctrl-h(Emacs Keybind) to clear a preedit,
-      firefox can't handle next backspace key.
-
-    */
-#ifdef USE_HACK_FOR_FIREFOX52
-    if(cn->kslength == 0 && canna_code == 0x08) {
-      g_signal_emit_by_name(cn, "commit", "A"); /* dummy */
-      return FALSE;
-    }
-#endif
-
-    return TRUE;
+    
+    return ret;
   }
 
   /* Pass char to Canna, anyway */  
