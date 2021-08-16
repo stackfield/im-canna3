@@ -96,6 +96,15 @@ guint get_canna_keysym(guint keyval, guint state)
     i++;
   }
 
+#define KEYCODE_UPPER_LETTER_BASE 48
+#define KEYCODE_LOWER_LETTER_BASE 96
+  if (state & GDK_CONTROL_MASK) {
+    if (keyval >= CTRL_KEYCODE_LOWER_LETTER_BASE)
+      return keyval - CTRL_KEYCODE_LOWER_LETTER_BASE;
+    if (keyval >= CTRL_KEYCODE_UPPER_LETTER_BASE)
+      return keyval - CTRL_KEYCODE_UPPER_LETTER_BASE;
+  }
+  
   return keyval;
 }
 
