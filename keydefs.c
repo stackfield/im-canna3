@@ -105,7 +105,7 @@ guint get_canna_keysym(guint keyval, guint state)
       return keyval - KEYCODE_UPPER_LETTER_BASE;
   }
   
-  return keyval;
+  return 0;
 }
 
 /* Mode change key combination (Shift+Space etc) or not? */
