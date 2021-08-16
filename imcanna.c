@@ -263,7 +263,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     if( cn->ja_input_mode == FALSE ) {
       im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       cn->ja_input_mode = TRUE;
-      memset(cn->workbuf, 0, BUFSIZ);
       memset(cn->kakutei_buf, 0, BUFSIZ);
       g_signal_emit_by_name(cn, "preedit_changed");
       g_signal_emit_by_name(cn, "preedit_start");
@@ -273,7 +272,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       cn->ja_input_mode = FALSE;
       gtk_widget_hide(cn->candwin);
-      memset(cn->workbuf, 0, BUFSIZ);
       memset(cn->kakutei_buf, 0, BUFSIZ);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
@@ -425,7 +423,6 @@ im_canna_focus_in (GtkIMContext* context) {
   if (cn->ja_input_mode == TRUE) {
     im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
     im_canna_update_modewin(cn);
-    memset(cn->workbuf, 0, BUFSIZ);
     memset(cn->kakutei_buf, 0, BUFSIZ);
     g_signal_emit_by_name(cn, "preedit_changed");
     gtk_widget_show(cn->modelabel);
@@ -489,21 +486,12 @@ static void
 im_canna_reset(GtkIMContext* context) {
   IMContextCanna* cn = (IMContextCanna*)context;
 
-  if( cn->kslength ) {
-    gchar* utf8 = NULL;
-    memset(cn->workbuf, 0, BUFSIZ);
-    strncpy(cn->workbuf, cn->ks.echoStr, cn->kslength);
-    utf8 = euc2utf8(cn->workbuf);
-    /*g_signal_emit_by_name(cn, "commit", utf8);*/
-    cn->kslength = 0;
-    g_free(utf8);
-  }
-
   if(cn->commit_str != NULL) {
     g_free(cn->commit_str);
     cn->commit_str = NULL;
   }
 
+  cn->kslength = 0;
   memset(cn->workbuf, 0, BUFSIZ);
   memset(cn->kakutei_buf, 0, BUFSIZ);
   g_signal_emit_by_name(cn, "preedit_changed");

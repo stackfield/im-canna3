@@ -18,7 +18,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
 
   if( cn->kslength == 0 ) {
-    bzero(cn->workbuf, sizeof(cn->workbuf));
     bzero(cn->kakutei_buf, sizeof(cn->kakutei_buf));
   }
 
@@ -39,8 +38,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     g_free(euc);
   }
   
-  memset(cn->workbuf, 0, BUFSIZ);
-  strncpy(cn->workbuf, cn->ks.echoStr, cn->kslength);
   g_signal_emit_by_name(cn, "preedit_changed");
   
   return TRUE;
@@ -113,7 +110,6 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
       gchar* utf8 = euc2utf8(euc);
 
       memset(cn->kakutei_buf, 0, BUFSIZ);
-      memset(cn->workbuf, 0, BUFSIZ);
 
       g_signal_emit_by_name(cn, "preedit_changed");
       
@@ -127,7 +123,6 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
       cn->commit_str = NULL;
 
       g_signal_emit_by_name(cn, "preedit_changed");
-      strncpy(cn->workbuf, cn->ks.echoStr, cn->kslength);
       return TRUE;
     }
   
