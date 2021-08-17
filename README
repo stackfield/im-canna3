@@ -14,6 +14,11 @@ You will need Canna, GTK+3, pkgconfig to build.
 Don't expect this will work for you.
 ABSOLUTELY NO WARRANTY
 
+<HOW TO TEST AND USE>
+$ GTK_IM_MODULE=Canna gtk3-demo
+focus in text widget, type *Shift-space or Ctrl-space or Alt-Kanji*
+if you need to kanji input. Enjoy!
+
 < CONFIGURE OPTION >
 * --enable-hack-for-firefox52
 To enable to an action which firefox52 (or its variant) completely able to
