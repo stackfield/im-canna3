@@ -17,7 +17,7 @@ ABSOLUTELY NO WARRANTY
 <HOW TO TEST AND USE>
 $ GTK_IM_MODULE=Canna gtk3-demo
 focus in text widget, type *Shift-space or Ctrl-space or Alt-Kanji*
-if you need to kanji input. Enjoy!
+if you need to kan-kanji input. Enjoy!
 
 < CONFIGURE OPTION >
 * --enable-hack-for-firefox52
