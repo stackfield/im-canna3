@@ -48,12 +48,6 @@
 
 GType type_canna = 0;
 
-/*
-static guint snooper_id = 0;
-*/
-
-static GtkIMContext* focused_context = NULL;
-
 static void im_canna_class_init (GtkIMContextClass *class);
 static void im_canna_init (GtkIMContext *im_context);
 static void im_canna_finalize(GObject *obj);
@@ -68,8 +62,6 @@ static void im_canna_set_client_window(GtkIMContext* context, GdkWindow *win);
 static void im_canna_set_cursor_location (GtkIMContext *context,
 					  GdkRectangle *area);
 static void im_canna_reset(GtkIMContext* context);
-
-static guint focus_id = 0;
 
 /* sub_function_mode.c */
 extern gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key);
@@ -90,6 +82,27 @@ im_canna_enter_direct_mode(GtkIMContext *context, GdkEventKey *key);
 /* sub_japanese_mode.c */
 extern gboolean
 im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key);
+
+
+/*** For KeySnooper ***/
+#ifdef USE_KEYSNOOPER
+static guint snooper_id = 0;
+static GtkIMContext* focused_context = NULL;
+static guint focus_id = 0;
+
+static gboolean
+snooper_func(GtkWidget* widget, GdkEventKey* event, gpointer data) {
+  if( focused_context )
+    return im_canna_filter_keypress(focused_context, event);
+
+  return FALSE;
+}
+
+static gboolean
+return_false(GtkIMContext* context, GdkEventKey* key) {
+  return FALSE;
+}
+#endif
 
 static void
 scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
@@ -135,7 +148,12 @@ im_canna_class_init (GtkIMContextClass *class)
   GObjectClass *object_class = G_OBJECT_CLASS(class);
 
   im_context_class->set_client_window = im_canna_set_client_window;
+/* Use snooper */
+#ifdef USE_KEYSNOOPER
+  im_context_class->filter_keypress = return_false;
+#else
   im_context_class->filter_keypress = im_canna_filter_keypress;
+#endif
   im_context_class->get_preedit_string = im_canna_get_preedit_string;
   im_context_class->focus_in = im_canna_focus_in;
   im_context_class->focus_out = im_canna_focus_out;
@@ -172,8 +190,9 @@ im_canna_init (GtkIMContext *im_context)
   cn->candlabel = gtk_label_new("");
   gtk_container_add(GTK_CONTAINER(cn->candwin), cn->candlabel);
   cn->candwin_area.x = cn->candwin_area.y = 0;
-  cn->candwin_area.width = cn->candwin_area.width = 100;
-
+  cn->candwin_area.width = cn->candwin_area.height = 0;
+  gtk_window_resize (GTK_WINDOW(cn->candwin), 1, 1);
+  
   gtk_widget_add_events(cn->candwin, GDK_BUTTON_PRESS_MASK);
   g_signal_connect(cn->candwin, "scroll_event", G_CALLBACK(scroll_cb), cn);
 
@@ -184,6 +203,11 @@ im_canna_init (GtkIMContext *im_context)
   cn->commit_str = NULL;
 
   im_canna_create_modewin(cn);
+  
+#ifdef USE_KEYSNOOPER
+  snooper_id = gtk_key_snooper_install((GtkKeySnoopFunc)snooper_func, NULL);
+#endif
+
 }
 
 static void
@@ -415,8 +439,9 @@ im_canna_set_client_window(GtkIMContext* context, GdkWindow *win) {
 static void
 im_canna_focus_in (GtkIMContext* context) {
   IMContextCanna* cn = IM_CONTEXT_CANNA(context);
-
+#ifdef USE_KEYSNOOPER  
   focused_context = context;
+#endif
 
   if (cn->ja_input_mode == TRUE) {
     im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
@@ -431,8 +456,10 @@ static void
 im_canna_focus_out (GtkIMContext* context) {
   IMContextCanna* cn = IM_CONTEXT_CANNA(context);
 
+#ifdef USE_KEYSNOOPER  
   focused_context = NULL;
-  
+#endif
+
   if (cn->ja_input_mode == TRUE) {
     gtk_widget_hide(cn->modewin);
     gtk_widget_hide(cn->candwin);

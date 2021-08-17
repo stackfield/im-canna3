@@ -61,3 +61,6 @@
 
 /* for firefox52 hack */
 #undef USE_HACK_FOR_FIREFOX52
+
+/* enable keysnooper */
+#undef USE_KEYSNOOPER

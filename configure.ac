@@ -55,6 +55,16 @@ AS_IF([test "x$enable_hack_for_firefox52" != xno],
     [AC_DEFINE([USE_HACK_FOR_FIREFOX52], [1],[for firefox52 hack])]
     )
 
+AC_ARG_ENABLE([keysnooper],
+	[AS_HELP_STRING([--enable-keysnooper],
+	 [enable Keysnooper function that makes key input more smooth in fence mode and candinate mode. (default=yes)])],
+	 [],
+	 [enable_keysnooper=yes])
+
+AS_IF([test "x$enable_keysnooper" != xno],
+    [AC_DEFINE([USE_KEYSNOOPER], [1],[enable keysnooper])]
+    )
+
 AC_CONFIG_FILES([
 Makefile
 im-canna.spec
