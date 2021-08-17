@@ -796,6 +796,7 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 enable_hack_for_firefox52
+enable_keysnooper
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1446,6 +1447,9 @@ Optional Features:
                           enable to an action which firefox52 (or its variant)
                           to completely able to handle backspace-key event
                           when preedit is empty. (default=no)
+  --enable-keysnooper     enable Keysnooper function that makes key input more
+                          smooth in fence mode and candinate mode.
+                          (default=yes)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -12491,6 +12495,23 @@ if test "x$enable_hack_for_firefox52" != xno
 then :
 
 printf "%s\n" "#define USE_HACK_FOR_FIREFOX52 1" >>confdefs.h
+
+
+fi
+
+# Check whether --enable-keysnooper was given.
+if test ${enable_keysnooper+y}
+then :
+  enableval=$enable_keysnooper;
+else $as_nop
+  enable_keysnooper=yes
+fi
+
+
+if test "x$enable_keysnooper" != xno
+then :
+
+printf "%s\n" "#define USE_KEYSNOOPER 1" >>confdefs.h
 
 
 fi
