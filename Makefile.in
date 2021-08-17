@@ -770,7 +770,7 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) config.h all-local
+all-am: Makefile $(LTLIBRARIES) config.h
 installdirs:
 	for dir in "$(DESTDIR)$(moduledir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -897,8 +897,8 @@ uninstall-am: uninstall-moduleLTLIBRARIES
 
 .MAKE: all install-am install-strip
 
-.PHONY: CTAGS GTAGS TAGS all all-am all-local am--depfiles am--refresh \
-	check check-am clean clean-cscope clean-generic clean-libtool \
+.PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
+	check-am clean clean-cscope clean-generic clean-libtool \
 	clean-moduleLTLIBRARIES cscope cscopelist-am ctags ctags-am \
 	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
 	dist-tarZ dist-xz dist-zip dist-zstd distcheck distclean \
@@ -922,7 +922,7 @@ uninstall-am: uninstall-moduleLTLIBRARIES
 gtk.immodules: Makefile.am $(module_LTLIBRARIES)
 	${bindir}/gtk-query-immodules-3.0 *.la > gtk.immodules
 
-all-local: gtk.immodules
+#all-local: gtk.immodules
 
 # For cut the cost on the install process
 install-etc:

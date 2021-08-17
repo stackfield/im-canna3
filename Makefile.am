@@ -41,7 +41,7 @@ module_list = ${libdir}/gtk-3.0/@GTK_VERSION@/immodules.cache
 gtk.immodules: Makefile.am $(module_LTLIBRARIES)
 	${bindir}/gtk-query-immodules-3.0 *.la > gtk.immodules
 
-all-local: gtk.immodules
+#all-local: gtk.immodules
 
 # For cut the cost on the install process
 install-etc:
