@@ -461,6 +461,8 @@ im_canna_focus_out (GtkIMContext* context) {
 #endif
 
   if (cn->ja_input_mode == TRUE) {
+    im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
+    im_canna_update_modewin(cn);
     gtk_widget_hide(cn->modewin);
     gtk_widget_hide(cn->candwin);
   }
