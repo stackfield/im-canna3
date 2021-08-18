@@ -46,6 +46,19 @@ void handle_gline (IMContextCanna* cn)
   cn->gline_revLen = cn->ks.gline.revLen;
 }
 
+void clear_gline (IMContextCanna* cn)
+{
+  /* printf("GLineInfo ks.mode: %s\n", cn->ks.mode); */
+  /* printf("GLineInfo ks.gline.line: %sA\n", cn->ks.gline.line); */
+  /* printf("GLineInfo ks.gline.length: %d\n", cn->ks.gline.length); */
+
+  if (cn->gline_message != NULL)
+    g_free(cn->gline_message);
+
+  cn->gline_message = NULL;
+  cn->gline_length = cn->ks.gline.revPos = cn->gline_revLen = 0;
+}
+
 int
 im_canna_get_num_of_canna_mode(IMContextCanna* cn) {
   char mode[1];
