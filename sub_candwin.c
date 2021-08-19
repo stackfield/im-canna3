@@ -40,6 +40,8 @@ void im_canna_create_candwin(IMContextCanna* cn) {
   g_signal_connect(cn->candwin, "scroll_event", G_CALLBACK(scroll_cb), cn);
 
   cn->layout  = gtk_widget_create_pango_layout(cn->candwin, "");
+  
+  gtk_window_set_accept_focus(cn->candwin, FALSE);
 }
 
 static void im_canna_show_candwin(IMContextCanna* cn, gchar* candstr) {

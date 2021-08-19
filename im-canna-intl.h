@@ -38,8 +38,8 @@ typedef struct _IMContextCanna {
   jrKanjiStatus ks;
   gint canna_context; /* Cast from pointer - FIXME */
   int cand_stat;
-  GtkWidget* candwin;
-  GtkWidget* candlabel;
+  GtkWindow* candwin;
+  GtkWindow* candlabel;
   PangoLayout* layout;
   GdkWindow* client_window;
 

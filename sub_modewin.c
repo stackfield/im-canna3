@@ -20,7 +20,6 @@ void im_canna_create_modewin(IMContextCanna* cn) {
   cn->modelabel = gtk_label_new("");
   gtk_container_add(GTK_CONTAINER(cn->modewin), cn->modelabel);
   
-  im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
   im_canna_update_modewin(cn);
 }
 
