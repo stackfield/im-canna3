@@ -14,6 +14,34 @@
 static void im_canna_show_candwin(IMContextCanna* cn, gchar* candstr);
 void im_canna_update_candwin(IMContextCanna* cn);
 
+static void
+scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
+  switch(event->direction) {
+  case GDK_SCROLL_UP:
+    jrKanjiString(cn->canna_context, 0x02, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    break;
+  case GDK_SCROLL_DOWN:
+    jrKanjiString(cn->canna_context, 0x06, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    break;
+  default:
+    break;
+  }
+}
+
+void im_canna_create_candwin(IMContextCanna* cn) {
+  cn->candwin = gtk_window_new(GTK_WINDOW_POPUP);  
+  cn->candlabel = gtk_label_new("");
+  gtk_container_add(GTK_CONTAINER(cn->candwin), cn->candlabel);
+  cn->candwin_area.x = cn->candwin_area.y = 0;
+  cn->candwin_area.width = cn->candwin_area.height = 0;
+  gtk_window_resize (GTK_WINDOW(cn->candwin), 1, 1);
+  
+  gtk_widget_add_events(cn->candwin, GDK_BUTTON_PRESS_MASK);
+  g_signal_connect(cn->candwin, "scroll_event", G_CALLBACK(scroll_cb), cn);
+
+  cn->layout  = gtk_widget_create_pango_layout(cn->candwin, "");
+}
+
 static void im_canna_show_candwin(IMContextCanna* cn, gchar* candstr) {
   gchar* labeltext = euc2utf8(candstr);
   PangoAttrList* attrlist = pango_attr_list_new();

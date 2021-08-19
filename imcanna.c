@@ -67,13 +67,14 @@ static void im_canna_reset(GtkIMContext* context);
 extern gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key);
 
 /* sub_candwin.c */
+extern void im_canna_create_candwin(IMContextCanna* cn);
 extern void im_canna_update_candwin(IMContextCanna* cn);
-extern void im_canna_update_modewin(IMContextCanna* cn);
 
 /* sub_modewin.c */
 extern void im_canna_create_modewin(IMContextCanna* cn);
 extern void im_canna_update_modewin(IMContextCanna* cn);
 extern void im_canna_move_modewin(IMContextCanna* cn);
+extern void im_canna_update_modewin(IMContextCanna* cn);
 
 /* sub_direct_mode.c */
 extern gboolean
@@ -103,20 +104,6 @@ return_false(GtkIMContext* context, GdkEventKey* key) {
   return FALSE;
 }
 #endif
-
-static void
-scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
-  switch(event->direction) {
-  case GDK_SCROLL_UP:
-    jrKanjiString(cn->canna_context, 0x02, cn->kakutei_buf, BUFSIZ, &cn->ks);
-    break;
-  case GDK_SCROLL_DOWN:
-    jrKanjiString(cn->canna_context, 0x06, cn->kakutei_buf, BUFSIZ, &cn->ks);
-    break;
-  default:
-    break;
-  }
-}
 
 void
 im_canna_register_type (GTypeModule *module)
@@ -182,27 +169,17 @@ im_canna_init (GtkIMContext *im_context)
   cn->gline_message = g_strdup("TEST");
   cn->gline_revPos = cn->gline_revLen = 0;
   cn->gline_length = 0;
-  
-  jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
-  jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
-  
-  cn->candwin = gtk_window_new(GTK_WINDOW_POPUP);  
-  cn->candlabel = gtk_label_new("");
-  gtk_container_add(GTK_CONTAINER(cn->candwin), cn->candlabel);
-  cn->candwin_area.x = cn->candwin_area.y = 0;
-  cn->candwin_area.width = cn->candwin_area.height = 0;
-  gtk_window_resize (GTK_WINDOW(cn->candwin), 1, 1);
-  
-  gtk_widget_add_events(cn->candwin, GDK_BUTTON_PRESS_MASK);
-  g_signal_connect(cn->candwin, "scroll_event", G_CALLBACK(scroll_cb), cn);
 
-  cn->layout  = gtk_widget_create_pango_layout(cn->candwin, "");
   cn->client_window = NULL;
   cn->focus_in_candwin_show = FALSE;
   cn->ja_input_mode = FALSE;
   cn->commit_str = NULL;
 
+  jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
+  jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
+  
   im_canna_create_modewin(cn);
+  im_canna_create_candwin(cn);
   
 #ifdef USE_KEYSNOOPER
   snooper_id = gtk_key_snooper_install((GtkKeySnoopFunc)snooper_func, NULL);
