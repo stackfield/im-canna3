@@ -276,11 +276,13 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     
     if( cn->ja_input_mode == FALSE ) {
       cn->ja_input_mode = TRUE;
+      im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
       g_signal_emit_by_name(cn, "preedit_start");
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     } else {
       cn->ja_input_mode = FALSE;
+      im_canna_kill_unspecified_string(cn);
       gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
