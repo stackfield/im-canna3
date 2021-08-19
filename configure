@@ -1449,7 +1449,7 @@ Optional Features:
                           when preedit is empty. (default=no)
   --enable-keysnooper     enable Keysnooper function that makes key input more
                           smooth in fence mode and candinate mode.
-                          (default=yes)
+                          (default=no)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -12504,7 +12504,7 @@ if test ${enable_keysnooper+y}
 then :
   enableval=$enable_keysnooper;
 else $as_nop
-  enable_keysnooper=yes
+  enable_keysnooper=no
 fi
 
 

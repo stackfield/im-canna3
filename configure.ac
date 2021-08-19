@@ -57,9 +57,9 @@ AS_IF([test "x$enable_hack_for_firefox52" != xno],
 
 AC_ARG_ENABLE([keysnooper],
 	[AS_HELP_STRING([--enable-keysnooper],
-	 [enable Keysnooper function that makes key input more smooth in fence mode and candinate mode. (default=yes)])],
+	 [enable Keysnooper function that makes key input more smooth in fence mode and candinate mode. (default=no)])],
 	 [],
-	 [enable_keysnooper=yes])
+	 [enable_keysnooper=no])
 
 AS_IF([test "x$enable_keysnooper" != xno],
     [AC_DEFINE([USE_KEYSNOOPER], [1],[enable keysnooper])]
