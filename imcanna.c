@@ -490,14 +490,5 @@ static void
 im_canna_reset(GtkIMContext* context) {
   IMContextCanna* cn = (IMContextCanna*)context;
 
-  if(cn->commit_str != NULL) {
-    g_free(cn->commit_str);
-    cn->commit_str = NULL;
-  }
-
-  cn->kslength = 0;
-  memset(cn->workbuf, 0, BUFSIZ);
-  memset(cn->kakutei_buf, 0, BUFSIZ);
   g_signal_emit_by_name(cn, "preedit_changed");
 }
-
