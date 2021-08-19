@@ -421,6 +421,8 @@ im_canna_focus_in (GtkIMContext* context) {
 #endif
 
   if (cn->ja_input_mode == TRUE) {
+    im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
+    g_signal_emit_by_name(cn, "preedit_changed");
     im_canna_update_modewin(cn);
     gtk_widget_show(cn->modelabel);
     gtk_widget_show(cn->modewin);
@@ -494,5 +496,6 @@ im_canna_reset(GtkIMContext* context) {
     cn->commit_str = NULL;
   }
   
+  cn->kslength = 0;
   g_signal_emit_by_name(cn, "preedit_changed");
 }
