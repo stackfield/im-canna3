@@ -23,8 +23,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   if( cn->ks.length == -1 ) {
     return FALSE;
   }
-
-  cn->kslength = cn->ks.length;
   
   if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
     gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
@@ -34,6 +32,14 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     g_free(utf8);
     g_free(euc);
   }
+
+  if(cn->preedit_string == NULL)
+    g_free(cn->preedit_string);
+
+  cn->preedit_length = cn->ks.length;
+  cn->preedit_revPos = cn->ks.revPos;
+  cn->preedit_revLen = cn->ks.revLen;
+  cn->preedit_string = g_strdup(cn->ks.echoStr);
   
   g_signal_emit_by_name(cn, "preedit_changed");
   
@@ -50,7 +56,7 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
   nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
 
   if( cn->ks.length != -1 )
-    cn->kslength = cn->ks.length;
+    cn->preedit_length = cn->ks.length;
   if( strlen(cn->kakutei_buf) == 1 && cn->kakutei_buf[0] == canna_code ) {
     cn->kakutei_buf[0] = '\0';
   }
@@ -72,14 +78,25 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
     g_signal_emit_by_name(cn, "commit", cn->commit_str);
     g_free(cn->commit_str);
     cn->commit_str = NULL;
-	
+
+    cn->preedit_length = cn->ks.length;
+    cn->preedit_revPos = cn->ks.revPos;
+    cn->preedit_revLen = cn->ks.revLen;
+    cn->preedit_string = g_strdup(cn->ks.echoStr);
+
     g_signal_emit_by_name(cn, "preedit_changed");
     return TRUE;
   }
 
   if(cn->ks.echoStr != NULL) {
-    if(*cn->ks.echoStr != '\0' || canna_code == 0x08)
+    if(*cn->ks.echoStr != '\0' || canna_code == 0x08) {
+      cn->preedit_length = cn->ks.length;
+      cn->preedit_revPos = cn->ks.revPos;
+      cn->preedit_revLen = cn->ks.revLen;
+      cn->preedit_string = g_strdup(cn->ks.echoStr);
+    
       g_signal_emit_by_name(cn, "preedit_changed");
+    }
   }
 
   /*
@@ -96,6 +113,11 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
   }
 #endif
 
+  cn->preedit_length = cn->ks.length;
+  cn->preedit_revPos = cn->ks.revPos;
+  cn->preedit_revLen = cn->ks.revLen;
+  cn->preedit_string = g_strdup(cn->ks.echoStr);
+
   return TRUE;
 }
 
@@ -106,7 +128,7 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
   guchar canna_code = 0;
   
   /* No preedit char yet */
-  if( cn->kslength == 0 ) {
+  if( cn->ks.length == 0 ) {
     if( im_canna_is_key_of_emacs_like_bindkey(key) == TRUE )
       return FALSE;
     if( im_canna_is_key_need_pass_in_no_preedit(key) == TRUE )

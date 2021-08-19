@@ -73,10 +73,12 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     }
-    
+
+    /*
     if ( cn->ks.length != -1 )
       cn->kslength = cn->ks.length;
-
+    */
+    
     if ( strlen(cn->kakutei_buf) == 1 && cn->kakutei_buf[0] == canna_code ) {
       cn->kakutei_buf[0] = '\0';
     }

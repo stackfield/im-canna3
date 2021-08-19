@@ -160,7 +160,6 @@ im_canna_init (GtkIMContext *im_context)
 
   cn->canna_context = (int)cn;
   cn->cand_stat = 0;
-  cn->kslength = 0;
   cn->workbuf = g_new0(guchar, BUFSIZ);
   cn->kakutei_buf = g_new0(guchar, BUFSIZ);
 
@@ -175,6 +174,10 @@ im_canna_init (GtkIMContext *im_context)
   cn->ja_input_mode = FALSE;
   cn->commit_str = NULL;
 
+  cn->preedit_string = NULL;
+  cn->preedit_length = 0;
+  cn->preedit_revPos = cn->preedit_revLen = 0;
+  
   jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
   jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
   
@@ -326,17 +329,17 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
     *cursor_pos = 0;
   }
   
-  if (cn->kslength == 0) {
+  if (cn->preedit_string == 0) {
     *str = g_strdup("");
     return;
   }
 
-  if (cn->ks.echoStr == NULL || *cn->ks.echoStr == '\0') {
+  if (cn->preedit_string == NULL || *cn->preedit_string == '\0') {
     *str = g_strdup("");
     return;
   }
 
-  if (((guint16 *)cn->ks.echoStr)[0] < 0x0020) {
+  if (((guint16 *)cn->preedit_string)[0] < 0x0020) {
     *str = g_strdup("");
     return;
   }
@@ -351,7 +354,7 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
     return;    
   }
 
-  eucstr = g_strndup(cn->ks.echoStr, cn->kslength);
+  eucstr = g_strndup(cn->preedit_string, cn->preedit_length);
 
   *str = euc2utf8(eucstr);
   g_free(eucstr);
@@ -365,17 +368,17 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
     attr->end_index = strlen(*str) ;
     pango_attr_list_insert(*attrs, attr);
 
-    if (cn->ks.revLen > 0) {
+    if (cn->preedit_revLen > 0) {
       attr = pango_attr_background_new(0, 0, 0);
-      attr->start_index = index_mb2utf8(cn->ks.echoStr, cn->ks.revPos);
-      attr->end_index = index_mb2utf8(cn->ks.echoStr,
-				      cn->ks.revPos+cn->ks.revLen);
+      attr->start_index = index_mb2utf8(cn->preedit_string, cn->preedit_revPos);
+      attr->end_index = index_mb2utf8(cn->preedit_string,
+				      cn->preedit_revPos+cn->preedit_revLen);
       pango_attr_list_insert(*attrs, attr);
 
       attr = pango_attr_foreground_new(0xffff, 0xffff, 0xffff);
-      attr->start_index = index_mb2utf8(cn->ks.echoStr, cn->ks.revPos);
-      attr->end_index = index_mb2utf8(cn->ks.echoStr,
-				      cn->ks.revPos+cn->ks.revLen);
+      attr->start_index = index_mb2utf8(cn->preedit_string, cn->preedit_revPos);
+      attr->end_index = index_mb2utf8(cn->preedit_string,
+				      cn->preedit_revPos+cn->preedit_revLen);
       pango_attr_list_insert(*attrs, attr);
     }
   }
@@ -383,12 +386,12 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
   if (cursor_pos != NULL) {
     int charpos = 0, eucpos = 0, curpos = 0;
 
-    curpos = cn->ks.revPos;
-    if(cn->ks.revPos != 0 && cn->ks.revLen > 0)
-      curpos += cn->ks.revLen;
+    curpos = cn->preedit_revPos;
+    if(cn->preedit_revPos != 0 && cn->preedit_revLen > 0)
+      curpos += cn->preedit_revLen;
     
     while (curpos > eucpos) {
-      unsigned char c = *(cn->ks.echoStr + eucpos);
+      unsigned char c = *(cn->preedit_string + eucpos);
 	
       if (c < 0x80)
 	eucpos += 1; // EUC G0 (ASCII) == GL
@@ -421,8 +424,6 @@ im_canna_focus_in (GtkIMContext* context) {
 #endif
 
   if (cn->ja_input_mode == TRUE) {
-    im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
-    g_signal_emit_by_name(cn, "preedit_changed");
     im_canna_update_modewin(cn);
     gtk_widget_show(cn->modelabel);
     gtk_widget_show(cn->modewin);
@@ -437,9 +438,28 @@ im_canna_focus_out (GtkIMContext* context) {
   focused_context = NULL;
 #endif
 
-  if (cn->ja_input_mode == TRUE) {
-    im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
-    g_signal_emit_by_name(cn, "preedit_changed");
+  if (cn->ja_input_mode == TRUE) {    
+    if(cn->preedit_length > 0) {
+      gchar* str = NULL;
+      
+      if(cn->commit_str != NULL) {
+	g_free(cn->commit_str);
+	cn->commit_str = NULL;
+      }
+
+      str = euc2utf8(cn->preedit_string);
+      g_signal_emit_by_name(cn, "commit", str);
+      g_free(str);
+      
+      g_free(cn->preedit_string);
+      cn->preedit_length = 0;
+      cn->preedit_revLen = cn->preedit_revPos = 0;
+      
+      g_signal_emit_by_name(cn, "preedit_changed");
+    }
+
+    im_canna_kill_unspecified_string(cn);
+        
     clear_gline(cn);
     im_canna_update_modewin(cn);
     gtk_widget_hide(cn->modewin);
@@ -491,11 +511,23 @@ static void
 im_canna_reset(GtkIMContext* context) {
   IMContextCanna* cn = (IMContextCanna*)context;
 
-  if(cn->commit_str != NULL) {
-    g_free(cn->commit_str);
-    cn->commit_str = NULL;
+  if(cn->preedit_length > 0) {
+    gchar* str = NULL;
+      
+    if(cn->commit_str != NULL) {
+      g_free(cn->commit_str);
+      cn->commit_str = NULL;
+    }
+
+    str = euc2utf8(cn->preedit_string);
+    g_signal_emit_by_name(cn, "commit", str);
+    g_free(str);
+      
+    g_free(cn->preedit_string);
+    cn->preedit_length = 0;
+    cn->preedit_revLen = cn->preedit_revPos = 0;
+    g_signal_emit_by_name(cn, "preedit_changed");
   }
-  
-  cn->kslength = 0;
-  g_signal_emit_by_name(cn, "preedit_changed");
+    
+  im_canna_kill_unspecified_string(cn);
 }

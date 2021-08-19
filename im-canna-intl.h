@@ -32,7 +32,6 @@
 
 typedef struct _IMContextCanna {
   GtkIMContext parent;
-  gint kslength;
   guchar* workbuf;
   guchar* kakutei_buf;
   jrKanjiStatus ks;
@@ -52,6 +51,11 @@ typedef struct _IMContextCanna {
 
   gchar *commit_str;
   gchar* modebuf_utf8;
+
+  gchar *preedit_string;
+  gint preedit_revPos;
+  gint preedit_revLen;
+  gint preedit_length;
   
   gchar* gline_message;
   gint gline_length;
