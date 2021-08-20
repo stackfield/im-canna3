@@ -60,6 +60,8 @@ typedef struct _IMContextCanna {
   gchar* gline_message;
   gint gline_length;
   gint gline_revPos, gline_revLen;
+
+  int initinal_canna_mode;
 } IMContextCanna;
 
 typedef struct _IMContextCannaClass {

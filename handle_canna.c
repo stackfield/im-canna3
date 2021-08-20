@@ -20,10 +20,7 @@ void handle_modebuf (IMContextCanna* cn) {
   if(cn->modebuf_utf8 != NULL)
     g_free(cn->modebuf_utf8);
   
-  if(cn->ja_input_mode == TRUE)
-    cn->modebuf_utf8 = g_strdup(euc2utf8(modebuf));
-  else
-    cn->modebuf_utf8 = g_strdup("");
+  cn->modebuf_utf8 = g_strdup(euc2utf8(modebuf));
 
   g_free(modebuf);
 }
@@ -76,8 +73,6 @@ void im_canna_force_change_mode(IMContextCanna* cn, int mode)
 {
   jrKanjiStatusWithValue ksv;
 
-  /*  cn->kslength = 0;*/
-
   ksv.ks = &(cn->ks);
   ksv.val = mode;
   ksv.buffer = cn->workbuf;
@@ -91,9 +86,7 @@ void im_canna_kill_unspecified_string(IMContextCanna* cn)
   jrKanjiStatusWithValue ksv;
 
   ksv.ks = &(cn->ks);
-  ksv.val = 0;
   ksv.buffer = cn->workbuf;
   ksv.bytes_buffer = BUFSIZ;
   jrKanjiControl(cn->canna_context, KC_KILL, (void*)&ksv);
 }
-

@@ -181,7 +181,12 @@ im_canna_init (GtkIMContext *im_context)
   jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
   jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
 
-  im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
+  cn->initinal_canna_mode = im_canna_get_num_of_canna_mode(cn);
+
+  if ( cn->initinal_canna_mode == CANNA_MODE_AlphaMode ) {
+    cn->initinal_canna_mode=CANNA_MODE_HenkanMode;
+    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
+  }
   
   im_canna_create_modewin(cn);
   im_canna_create_candwin(cn);
@@ -267,11 +272,11 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   
   if (im_canna_is_modechangekey(context, key)) {
     if( cn->preedit_length > 0) {
-      g_signal_emit_by_name(cn, "preedit_changed");
-      
       g_free(cn->preedit_string);
       cn->preedit_length = 0;
       cn->preedit_revLen = cn->preedit_revPos = 0;
+      g_signal_emit_by_name(cn, "preedit_changed");
+      im_canna_kill_unspecified_string(cn);
     }
     
     if( cn->ja_input_mode == FALSE ) {
@@ -282,12 +287,11 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_show_all(cn->modewin);
     } else {
       cn->ja_input_mode = FALSE;
-      im_canna_kill_unspecified_string(cn);
       gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
       g_signal_emit_by_name(cn, "preedit_end");
-    }    
+    }
     return TRUE;
   }
 
@@ -432,8 +436,13 @@ im_canna_focus_in (GtkIMContext* context) {
 #endif
 
   if (cn->ja_input_mode == TRUE) {
+    int mode = -1;
+    mode = im_canna_get_num_of_canna_mode(cn);
+
+    if (mode == CANNA_MODE_AlphaMode)
+      im_canna_force_change_mode(cn, cn->initinal_canna_mode);
+
     im_canna_update_modewin(cn);
-    gtk_widget_show(cn->modelabel);
     gtk_widget_show(cn->modewin);
   }
 }
@@ -531,11 +540,11 @@ im_canna_reset(GtkIMContext* context) {
     g_signal_emit_by_name(cn, "commit", str);
     g_free(str);
 
-    g_signal_emit_by_name(cn, "preedit_changed");
-    
     g_free(cn->preedit_string);
     cn->preedit_length = 0;
     cn->preedit_revLen = cn->preedit_revPos = 0;
     im_canna_kill_unspecified_string(cn);
+
+    g_signal_emit_by_name(cn, "preedit_changed");
   }
 }
