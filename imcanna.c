@@ -184,7 +184,7 @@ im_canna_init (GtkIMContext *im_context)
   cn->initinal_canna_mode = im_canna_get_num_of_canna_mode(cn);
 
   if ( cn->initinal_canna_mode == CANNA_MODE_AlphaMode ) {
-    cn->initinal_canna_mode=CANNA_MODE_HenkanMode;
+    cn->initinal_canna_mode = CANNA_MODE_HenkanMode;
     im_canna_force_change_mode(cn, cn->initinal_canna_mode);
   }
   
