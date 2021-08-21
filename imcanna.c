@@ -327,7 +327,12 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_show(cn->modewin);
     }
   }
-  
+
+  if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
+    gtk_widget_hide(cn->modewin);
+    cn->ja_input_mode = FALSE;
+  }
+
   return ret;
 }
 

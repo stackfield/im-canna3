@@ -1,3 +1,4 @@
+#include "im-canna-intl.h"
 #include "keydefs.h"
 
 gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key);
@@ -178,6 +179,8 @@ guint get_canna_keysym(guint keyval, guint state)
 
 /* Mode change key combination (Shift+Space etc) or not? */
 gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key) {
+  IMContextCanna *cn = IM_CONTEXT_CANNA(context);
+
   /* Kinput2 style - Shift + Space */
   if( key->state & GDK_SHIFT_MASK && key->keyval == GDK_space ) {
     return TRUE;
@@ -191,7 +194,7 @@ gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key) {
   } else if( key->state & GDK_CONTROL_MASK && key->keyval == GDK_backslash ) {
     return TRUE;
   /* PC-9801/21 Style - Xfer */ 
-  } else if( key->keyval == GDK_Henkan ) {
+  } else if( key->keyval == GDK_Henkan && cn->ja_input_mode == FALSE ) {
     return TRUE;
   }
   /* or should be customizable with dialog */
