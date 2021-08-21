@@ -152,10 +152,6 @@ guint get_canna_keysym(guint keyval, guint state)
 {
   guint i = 0;
 
-  /* Canna can't handle key with shift-control. */
-  if (state & MASK_CTLSFT) 
-    return 0;
-
   while( gdk2canna_keytable[i].gdk_keycode != 0
          && gdk2canna_keytable[i].canna_keycode != 0 ) {
     guint mask = gdk2canna_keytable[i].mask;

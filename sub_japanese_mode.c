@@ -126,7 +126,11 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   guchar canna_code = 0;
-  
+
+  /* Canna can't handle key with mod1-control. */
+  if (key->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK))
+      return FALSE;
+ 
   /* No preedit char yet */
   if( cn->ks.length == 0 ) {
     if( im_canna_is_key_of_emacs_like_bindkey(key) == TRUE )
@@ -135,10 +139,6 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
       return FALSE;
   }
 
-  /* Canna can't handle key with shift-control. */
-  if (key->state & GDK_CONTROL_MASK && key->state & GDK_SHIFT_MASK)
-    return FALSE;
-  
   if (im_canna_is_key_of_no_use_in_canna(key))
     return FALSE;
 
