@@ -195,7 +195,10 @@ gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key) {
     return TRUE;
   /* PC-9801/21 Style - Xfer */ 
   } else if( key->keyval == GDK_Henkan ) {
-    return TRUE;
+    if( key->state & GDK_CONTROL_MASK && cn->ja_input_mode == TRUE)
+      return TRUE;
+    if( cn->ja_input_mode == FALSE )
+      return TRUE;
   }
   /* or should be customizable with dialog */
 
