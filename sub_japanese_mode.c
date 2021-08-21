@@ -134,10 +134,14 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
     if( im_canna_is_key_need_pass_in_no_preedit(key) == TRUE )
       return FALSE;
   }
+
+  /* Canna can't handle key with shift-control. */
+  if (key->state & GDK_CONTROL_MASK && key->state & GDK_SHIFT_MASK)
+    return FALSE;
   
   if (im_canna_is_key_of_no_use_in_canna(key))
     return FALSE;
-  
+
   canna_code = get_canna_keysym(key->keyval, key->state);
 
   if( canna_code != 0 ) {

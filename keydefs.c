@@ -7,6 +7,87 @@ gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key) ;
 guint get_canna_keysym(guint keyval, guint state);
 gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key);
 
+static struct _gdk2canna_keytable {
+  guint mask; /* Modifier key mask */
+  guint gdk_keycode; /* Gdk key symbols */
+  guint canna_keycode; /* Canna Key code or raw hex code */
+} gdk2canna_keytable[] = {
+
+  /*** Arrow Key ***/
+  { MASK_NONE, GDK_Down, 0x0e }, /* Alias to GDK_Page_Down */
+  { MASK_NONE, GDK_Left, 0x02 },
+  { MASK_NONE, GDK_Right, 0x06 },
+  { MASK_NONE, GDK_Up, 0x10 }, /* Alias to GDK_Page_Up */
+  /* For Shift - Ctrl Arrow Key */
+  { MASK_CONTROL, GDK_Down, CANNA_KEY_Cntrl_Down },
+  { MASK_CONTROL, GDK_Left, CANNA_KEY_Cntrl_Left },
+  { MASK_CONTROL, GDK_Right, CANNA_KEY_Cntrl_Right },
+  { MASK_CONTROL, GDK_Right, CANNA_KEY_Cntrl_Right },
+  { MASK_CONTROL, GDK_Up, CANNA_KEY_Cntrl_Up },
+  { MASK_SHIFT, GDK_Down, CANNA_KEY_Shift_Down },
+  { MASK_SHIFT, GDK_Left, CANNA_KEY_Shift_Left },
+  { MASK_SHIFT, GDK_Right, CANNA_KEY_Shift_Right },
+  { MASK_SHIFT, GDK_Right, CANNA_KEY_Shift_Right },
+  { MASK_SHIFT, GDK_Up, CANNA_KEY_Shift_Up },
+
+  { MASK_NONE, GDK_Page_Down, 0x0e },
+  { MASK_NONE, GDK_Page_Up, 0x10 },
+  { MASK_NONE, GDK_BackSpace, 0x08 },
+  { MASK_NONE, GDK_Home, CANNA_KEY_Home  },
+  { MASK_NONE, GDK_End, CANNA_KEY_End  },
+
+  /* For Function Key */
+  { MASK_NONE, GDK_KEY_F1, CANNA_KEY_F1},
+  { MASK_NONE, GDK_KEY_F2, CANNA_KEY_F2},
+  { MASK_NONE, GDK_KEY_F3, CANNA_KEY_F3},
+  { MASK_NONE, GDK_KEY_F4, CANNA_KEY_F4},
+  { MASK_NONE, GDK_KEY_F5, CANNA_KEY_F5},
+  { MASK_NONE, GDK_KEY_F6, CANNA_KEY_F6},
+  { MASK_NONE, GDK_KEY_F7, CANNA_KEY_F7},
+  { MASK_NONE, GDK_KEY_F8, CANNA_KEY_F8},
+  { MASK_NONE, GDK_KEY_F9, CANNA_KEY_F9},
+  { MASK_SHIFT, GDK_KEY_F1, CANNA_KEY_F1},
+  { MASK_SHIFT, GDK_KEY_F2, CANNA_KEY_F2},
+  { MASK_SHIFT, GDK_KEY_F3, CANNA_KEY_F3},
+  { MASK_SHIFT, GDK_KEY_F4, CANNA_KEY_F4},
+  { MASK_SHIFT, GDK_KEY_F5, CANNA_KEY_F5},
+  { MASK_SHIFT, GDK_KEY_F6, CANNA_KEY_F6},
+  { MASK_SHIFT, GDK_KEY_F7, CANNA_KEY_F7},
+  { MASK_SHIFT, GDK_KEY_F8, CANNA_KEY_F8},
+  { MASK_SHIFT, GDK_KEY_F9, CANNA_KEY_F9},
+  { MASK_CONTROL, GDK_KEY_F1, CANNA_KEY_F1},
+  { MASK_CONTROL, GDK_KEY_F2, CANNA_KEY_F2},
+  { MASK_CONTROL, GDK_KEY_F3, CANNA_KEY_F3},
+  { MASK_CONTROL, GDK_KEY_F4, CANNA_KEY_F4},
+  { MASK_CONTROL, GDK_KEY_F5, CANNA_KEY_F5},
+  { MASK_CONTROL, GDK_KEY_F6, CANNA_KEY_F6},
+  { MASK_CONTROL, GDK_KEY_F7, CANNA_KEY_F7},
+  { MASK_CONTROL, GDK_KEY_F8, CANNA_KEY_F8},
+  { MASK_CONTROL, GDK_KEY_F9, CANNA_KEY_F9},
+
+  /* For Japanese 106 keyboards */
+  { MASK_NONE, GDK_Muhenkan, CANNA_KEY_Nfer },
+  { MASK_NONE, GDK_Henkan, CANNA_KEY_Xfer },
+  { MASK_SHIFT, GDK_Muhenkan, CANNA_KEY_Shift_Nfer },
+  { MASK_SHIFT, GDK_Henkan, CANNA_KEY_Shift_Xfer },
+  { MASK_CONTROL, GDK_Muhenkan, CANNA_KEY_Cntrl_Nfer },
+  { MASK_CONTROL, GDK_Henkan, CANNA_KEY_Cntrl_Xfer },
+
+  { MASK_NONE, GDK_Eisu_toggle, CANNA_KEY_EISU },
+  { MASK_SHIFT, GDK_Eisu_toggle, CANNA_KEY_EISU },
+  { MASK_CONTROL, GDK_Eisu_toggle, CANNA_KEY_EISU },
+  
+  { MASK_NONE, GDK_Hiragana_Katakana, CANNA_KEY_HIRAGANA },
+  { MASK_SHIFT, GDK_Hiragana_Katakana, CANNA_KEY_KATAKANA },
+  { MASK_CONTROL, GDK_Hiragana_Katakana, CANNA_KEY_HIRAGANA },
+
+  { MASK_NONE, GDK_Zenkaku_Hankaku, CANNA_KEY_HANKAKUZENKAKU },
+  { MASK_SHIFT, GDK_Zenkaku_Hankaku, CANNA_KEY_HANKAKUZENKAKU },
+  { MASK_CONTROL, GDK_Zenkaku_Hankaku, CANNA_KEY_HANKAKUZENKAKU },
+
+  { MASK_NONE, 0, 0 },
+};
+
 gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key)
 {
   if( key->state & GDK_CONTROL_MASK ) {
@@ -30,29 +111,16 @@ gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key)
 gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key)
 {
   switch (key->keyval) {
-  case GDK_Shift_L:
-  case GDK_Shift_R:
-  case GDK_F1:
-  case GDK_F2:
-  case GDK_F3:
-  case GDK_F4:
-  case GDK_F5:
-  case GDK_F6:
-  case GDK_F7:
-  case GDK_F8:
-  case GDK_F9:
   case GDK_F10:
   case GDK_F11:
   case GDK_F12:
   case GDK_Scroll_Lock:
   case GDK_Pause:
   case GDK_Num_Lock:
-  case GDK_Eisu_toggle:
   case GDK_Control_L:
   case GDK_Control_R:
   case GDK_Alt_L:
   case GDK_Alt_R:
-  case GDK_Hiragana_Katakana:
   case GDK_Delete:
   case GDK_Insert:
   case GDK_KP_Home:
@@ -83,6 +151,10 @@ gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key)
 guint get_canna_keysym(guint keyval, guint state)
 {
   guint i = 0;
+
+  /* Canna can't handle key with shift-control. */
+  if (state & MASK_CTLSFT) 
+    return 0;
 
   while( gdk2canna_keytable[i].gdk_keycode != 0
          && gdk2canna_keytable[i].canna_keycode != 0 ) {

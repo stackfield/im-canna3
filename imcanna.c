@@ -265,7 +265,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   if( key->type == GDK_KEY_RELEASE ) {
     return FALSE;
   };
-  
+
   /* Editable widget should pass mnemonic if ja-input-mode is on */
   g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
 		    (gpointer)cn->ja_input_mode);

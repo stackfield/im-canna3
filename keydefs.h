@@ -15,31 +15,6 @@
 #define MASK_CTLSFT	(GDK_SHIFT_MASK | GDK_CONTROL_MASK)
 #define MASK_NONE	0
 
-static struct _gdk2canna_keytable {
-  guint mask; /* Modifier key mask */
-  guint gdk_keycode; /* Gdk key symbols */
-  guint canna_keycode; /* Canna Key code or raw hex code */
-} gdk2canna_keytable[] = {
-  { MASK_NONE, GDK_Henkan, 0x0e },
-
-  { MASK_NONE, GDK_Up, 0x10 }, /* Alias to GDK_Page_Up */
-  { MASK_NONE, GDK_Left, 0x02 },
-  { MASK_NONE, GDK_Down, 0x0e }, /* Alias to GDK_Page_Down */
-  { MASK_NONE, GDK_Right, 0x06 },
-  { MASK_NONE, GDK_Page_Down, 0x0e },
-  { MASK_NONE, GDK_Page_Up, 0x10 },
-  { MASK_NONE, GDK_BackSpace, 0x08 },
-  { MASK_NONE, GDK_Home, CANNA_KEY_Home  },
-  { MASK_NONE, GDK_End, CANNA_KEY_End  },
-  { MASK_NONE,  GDK_Muhenkan, 0x07 },
-
-  { MASK_SHIFT, GDK_Right, CANNA_KEY_Shift_Right },
-  { MASK_SHIFT, GDK_Left, CANNA_KEY_Shift_Left },
-  { MASK_SHIFT, GDK_Mode_switch, 0x10 },
-
-  { MASK_NONE, 0, 0 },
-};
-
 extern gboolean im_canna_is_key_kind_of_enter(GdkEventKey *key);
 extern gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key);
 extern gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key);
