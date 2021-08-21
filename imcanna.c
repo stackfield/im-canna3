@@ -281,7 +281,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     
     if( cn->ja_input_mode == FALSE ) {
       cn->ja_input_mode = TRUE;
-      im_canna_force_change_mode(cn, CANNA_MODE_HenkanMode);
+      im_canna_force_change_mode(cn, cn->initinal_canna_mode);
       g_signal_emit_by_name(cn, "preedit_start");
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
@@ -436,12 +436,7 @@ im_canna_focus_in (GtkIMContext* context) {
 #endif
 
   if (cn->ja_input_mode == TRUE) {
-    int mode = -1;
-    mode = im_canna_get_num_of_canna_mode(cn);
-
-    if (mode == CANNA_MODE_AlphaMode)
-      im_canna_force_change_mode(cn, cn->initinal_canna_mode);
-
+    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
     im_canna_update_modewin(cn);
     gtk_widget_show(cn->modewin);
   }
