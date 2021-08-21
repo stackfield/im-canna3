@@ -190,6 +190,9 @@ gboolean im_canna_is_modechangekey(GtkIMContext *context, GdkEventKey *key) {
   /* Egg style - Control + '\' */
   } else if( key->state & GDK_CONTROL_MASK && key->keyval == GDK_backslash ) {
     return TRUE;
+  /* PC-9801/21 Style - Xfer */ 
+  } else if( key->keyval == GDK_Henkan ) {
+    return TRUE;
   }
   /* or should be customizable with dialog */
 
