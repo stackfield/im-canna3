@@ -56,6 +56,28 @@ void clear_gline (IMContextCanna* cn)
   cn->gline_length = cn->ks.gline.revPos = cn->gline_revLen = 0;
 }
 
+void handle_preedit (IMContextCanna *cn)
+{
+  if (cn->preedit_string != NULL)
+    g_free(cn->preedit_string);
+
+  cn->preedit_length = cn->ks.length;
+  cn->preedit_revPos = cn->ks.revPos;
+  cn->preedit_revLen = cn->ks.revLen;
+  if(cn->ks.echoStr != NULL)
+    cn->preedit_string = g_strdup(cn->ks.echoStr);
+}
+
+void clear_preedit (IMContextCanna *cn)
+{
+  if (cn->preedit_string != NULL) 
+    g_free(cn->preedit_string);
+
+  cn->preedit_string = NULL;
+  cn->preedit_length = 0;
+  cn->preedit_revPos = cn->preedit_revLen = 0;
+}
+
 int
 im_canna_get_num_of_canna_mode(IMContextCanna* cn) {
   char mode[1];

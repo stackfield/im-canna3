@@ -165,18 +165,13 @@ im_canna_init (GtkIMContext *im_context)
 
   cn->modebuf_utf8 = NULL;
 
-  cn->gline_message = g_strdup("TEST");
-  cn->gline_revPos = cn->gline_revLen = 0;
-  cn->gline_length = 0;
-
   cn->client_window = NULL;
   cn->focus_in_candwin_show = FALSE;
   cn->ja_input_mode = FALSE;
   cn->commit_str = NULL;
 
-  cn->preedit_string = NULL;
-  cn->preedit_length = 0;
-  cn->preedit_revPos = cn->preedit_revLen = 0;
+  clear_gline(cn);
+  clear_preedit(cn);
   
   jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
   jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
@@ -187,7 +182,7 @@ im_canna_init (GtkIMContext *im_context)
     cn->initinal_canna_mode = CANNA_MODE_HenkanMode;
     im_canna_force_change_mode(cn, cn->initinal_canna_mode);
   }
-  
+
   im_canna_create_modewin(cn);
   im_canna_create_candwin(cn);
   
@@ -276,11 +271,9 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
 		    (gpointer)cn->ja_input_mode);
   
-  if (im_canna_is_modechangekey(context, key)) {
+  if (im_canna_is_modechangekey(context, key)) {    
     if( cn->preedit_length > 0) {
-      g_free(cn->preedit_string);
-      cn->preedit_length = 0;
-      cn->preedit_revLen = cn->preedit_revPos = 0;
+      clear_preedit(cn);
       g_signal_emit_by_name(cn, "preedit_changed");
       im_canna_kill_unspecified_string(cn);
     }
@@ -351,8 +344,8 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
   if (cursor_pos != NULL) {
     *cursor_pos = 0;
   }
-  
-  if (cn->preedit_string == 0) {
+
+  if (cn->preedit_length <= 0) {
     *str = g_strdup("");
     return;
   }
@@ -474,10 +467,7 @@ im_canna_focus_out (GtkIMContext* context) {
       g_signal_emit_by_name(cn, "commit", str);
       g_free(str);
       
-      g_free(cn->preedit_string);
-      cn->preedit_length = 0;
-      cn->preedit_revLen = cn->preedit_revPos = 0;
-      
+      clear_preedit(cn);
       g_signal_emit_by_name(cn, "preedit_changed");
     }
 
@@ -546,11 +536,8 @@ im_canna_reset(GtkIMContext* context) {
     g_signal_emit_by_name(cn, "commit", str);
     g_free(str);
 
-    g_free(cn->preedit_string);
-    cn->preedit_length = 0;
-    cn->preedit_revLen = cn->preedit_revPos = 0;
-    im_canna_kill_unspecified_string(cn);
-
+    clear_preedit(cn);
     g_signal_emit_by_name(cn, "preedit_changed");
   }
 }
+
