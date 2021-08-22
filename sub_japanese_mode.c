@@ -55,7 +55,7 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
   /* for committing string written in front of cursor (e.g. Ctrl-J), */
   /* and kakutei_key (e.g. Ctrl-M and Enter Key). */
   /* NAKAI */
-  if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
+  if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20) ) {
     gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
     gchar* utf8 = euc2utf8(euc);
 
@@ -74,8 +74,9 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
     return TRUE;
   }
 
-  if(cn->ks.echoStr != NULL) {
-    if(cn->ks.echoStr[0] != '\0' && cn->ks.length != -1) {
+  if( cn->ks.echoStr != NULL ) {
+    if( (cn->ks.length == 0 && canna_code == 0x08) ||
+	(cn->ks.echoStr[0] != '\0' && cn->ks.length != -1) ) {
       handle_preedit(cn);
       g_signal_emit_by_name(cn, "preedit_changed");
     }
