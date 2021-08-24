@@ -110,4 +110,8 @@ void im_canna_kill_unspecified_string(IMContextCanna* cn)
   ksv.buffer = cn->workbuf;
   ksv.bytes_buffer = BUFSIZ;
   jrKanjiControl(cn->canna_context, KC_KILL, (void*)&ksv);
+
+  if(im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode) {
+    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
+  }
 }

@@ -472,7 +472,7 @@ im_canna_focus_out (GtkIMContext* context) {
     }
 
     im_canna_kill_unspecified_string(cn);
-        
+    
     clear_gline(cn);
     im_canna_update_modewin(cn);
     gtk_widget_hide(cn->modewin);
