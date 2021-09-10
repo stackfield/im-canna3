@@ -20,7 +20,7 @@ void handle_modebuf (IMContextCanna* cn) {
   if(cn->modebuf_utf8 != NULL)
     g_free(cn->modebuf_utf8);
   
-  cn->modebuf_utf8 = g_strdup(euc2utf8(modebuf));
+  cn->modebuf_utf8 = euc2utf8(modebuf);
 
   g_free(modebuf);
 }
@@ -64,6 +64,7 @@ void handle_preedit (IMContextCanna *cn)
   cn->preedit_length = cn->ks.length;
   cn->preedit_revPos = cn->ks.revPos;
   cn->preedit_revLen = cn->ks.revLen;
+
   if(cn->ks.echoStr != NULL)
     cn->preedit_string = g_strdup(cn->ks.echoStr);
 }
