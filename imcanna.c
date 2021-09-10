@@ -372,7 +372,7 @@ im_canna_get_preedit_string(GtkIMContext *ic, gchar **str,
 
   eucstr = g_strndup(cn->preedit_string, cn->preedit_length);
 
-  *str = euc2utf8(eucstr);
+  *str = g_strdup(euc2utf8(eucstr));
   g_free(eucstr);
 
   if(*str == NULL || strlen(*str) == 0) return;
