@@ -168,7 +168,6 @@ im_canna_init (GtkIMContext *im_context)
   cn->client_window = NULL;
   cn->focus_in_candwin_show = FALSE;
   cn->ja_input_mode = FALSE;
-  cn->commit_str = NULL;
 
   clear_gline(cn);
   clear_preedit(cn);
@@ -200,7 +199,6 @@ im_canna_finalize(GObject *obj) {
 
   g_free(cn->gline_message);
   g_free(cn->modebuf_utf8);
-  g_free(cn->commit_str);
   g_free(cn->workbuf);
   g_free(cn->kakutei_buf);
   gtk_widget_destroy(cn->candlabel);
@@ -455,11 +453,6 @@ im_canna_focus_out (GtkIMContext* context) {
     if(cn->preedit_length > 0) {
       gchar* str = NULL;
       
-      if(cn->commit_str != NULL) {
-	g_free(cn->commit_str);
-	cn->commit_str = NULL;
-      }
-
       str = euc2utf8(cn->preedit_string);
       g_signal_emit_by_name(cn, "commit", str);
       g_free(str);
@@ -524,11 +517,6 @@ im_canna_reset(GtkIMContext* context) {
   if(cn->preedit_length > 0) {
     gchar* str = NULL;
       
-    if(cn->commit_str != NULL) {
-      g_free(cn->commit_str);
-      cn->commit_str = NULL;
-    }
-
     str = euc2utf8(cn->preedit_string);
     g_signal_emit_by_name(cn, "commit", str);
     g_free(str);
