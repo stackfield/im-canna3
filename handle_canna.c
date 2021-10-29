@@ -61,6 +61,7 @@ void handle_preedit (IMContextCanna *cn)
   if (cn->preedit_string != NULL)
     g_free(cn->preedit_string);
 
+  cn->preedit_prevlen = cn->preedit_length;
   cn->preedit_length = cn->ks.length;
   cn->preedit_revPos = cn->ks.revPos;
   cn->preedit_revLen = cn->ks.revLen;
@@ -75,6 +76,7 @@ void clear_preedit (IMContextCanna *cn)
     g_free(cn->preedit_string);
 
   cn->preedit_string = NULL;
+  cn->preedit_prevlen = 0;
   cn->preedit_length = 0;
   cn->preedit_revPos = cn->preedit_revLen = 0;
 }

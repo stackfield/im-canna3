@@ -56,7 +56,9 @@ typedef struct _IMContextCanna {
   gint preedit_revPos;
   gint preedit_revLen;
   gint preedit_length;
-  
+
+  gint preedit_prevlen;
+
   gchar* gline_message;
   gint gline_length;
   gint gline_revPos, gline_revLen;

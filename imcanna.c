@@ -274,14 +274,13 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   if (im_canna_is_modechangekey(context, key)) {    
     if( cn->preedit_length > 0) {
       clear_preedit(cn);
-      g_signal_emit_by_name(cn, "preedit_changed");
+      g_signal_emit_by_name(cn, "preedit_end");
       im_canna_kill_unspecified_string(cn);
     }
     
     if( cn->ja_input_mode == FALSE ) {
       cn->ja_input_mode = TRUE;
       im_canna_force_change_mode(cn, cn->initinal_canna_mode);
-      g_signal_emit_by_name(cn, "preedit_start");
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     } else {
@@ -289,7 +288,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
-      g_signal_emit_by_name(cn, "preedit_end");
     }
     return TRUE;
   }
@@ -467,7 +465,7 @@ im_canna_focus_out (GtkIMContext* context) {
       g_free(str);
       
       clear_preedit(cn);
-      g_signal_emit_by_name(cn, "preedit_changed");
+      g_signal_emit_by_name(cn, "preedit_end");
     }
 
     im_canna_kill_unspecified_string(cn);
@@ -536,7 +534,7 @@ im_canna_reset(GtkIMContext* context) {
     g_free(str);
 
     clear_preedit(cn);
-    g_signal_emit_by_name(cn, "preedit_changed");
+    g_signal_emit_by_name(cn, "preedit_end");
   }
 }
 
