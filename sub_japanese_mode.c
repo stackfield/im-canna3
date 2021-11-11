@@ -49,6 +49,11 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     cn->commit_str = g_strdup(utf8);
     g_free(utf8);
     g_free(euc);
+
+    clear_preedit(cn);
+    g_signal_emit_by_name(cn, "preedit_changed");
+    g_signal_emit_by_name(cn, "preedit_end");
+    return TRUE;
   }
 
   handle_preedit(cn);
