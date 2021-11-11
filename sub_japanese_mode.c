@@ -72,13 +72,12 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
   }
 
   if( cn->ks.echoStr != NULL ) {
-    if( (cn->ks.length == 0 && canna_code == 0x08) ||
-	(cn->ks.echoStr[0] != '\0' && cn->ks.length != -1) ) {
+    if( canna_code == 0x08 ) {
       handle_preedit(cn);
       routine_for_preedit_signal(cn);
-      clear_preedit(cn);
-      
-      return FALSE;
+
+      if( cn->preedit_length == 0 )
+	return FALSE;
     }
   }
 
