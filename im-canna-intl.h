@@ -49,6 +49,7 @@ typedef struct _IMContextCanna {
   GtkWidget* modelabel;
   GdkRectangle candwin_area;
 
+  gchar *commit_str;
   gchar* modebuf_utf8;
 
   gchar *preedit_string;
