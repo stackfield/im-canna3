@@ -42,6 +42,15 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     return FALSE;
   }
 
+  if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
+    gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
+    gchar* utf8 = euc2utf8(euc);
+    g_free(cn->commit_str);
+    cn->commit_str = g_strdup(utf8);
+    g_free(utf8);
+    g_free(euc);
+  }
+
   handle_preedit(cn);
   routine_for_preedit_signal(cn);
 
@@ -65,6 +74,18 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
   /* and kakutei_key (e.g. Ctrl-M and Enter Key). */
   /* NAKAI */
   if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20) ) {
+    gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
+    gchar* utf8 = euc2utf8(euc);
+
+    g_free(cn->commit_str);
+    cn->commit_str = g_strdup(utf8);
+    g_free(utf8);
+    g_free(euc);
+	
+    g_signal_emit_by_name(cn, "commit", cn->commit_str);
+    g_free(cn->commit_str);
+    cn->commit_str = NULL;
+
     handle_preedit(cn);
     routine_for_preedit_signal(cn);
 
@@ -131,6 +152,11 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 
   /* Pass char to Canna, anyway */  
   if(roma2kana_canna(context, key->keyval) ) {
+    if (cn->commit_str != NULL) {
+      g_signal_emit_by_name(cn, "commit", cn->commit_str);
+      g_free(cn->commit_str);
+      cn->commit_str = NULL;
+    }
     return TRUE;
   }
   return FALSE;
