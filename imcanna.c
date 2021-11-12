@@ -287,6 +287,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_show_all(cn->modewin);
     } else {
       cn->ja_input_mode = FALSE;
+      im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);      
       gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
