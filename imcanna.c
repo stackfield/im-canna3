@@ -287,6 +287,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     } else {
       cn->ja_input_mode = FALSE;
       im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);
+      clear_gline(cn);
       gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
@@ -312,9 +313,11 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   /*** update cardwin & modewin ***/
   if( ret == TRUE ) {
     mode = im_canna_get_num_of_canna_mode(cn);
+
+    handle_gline(cn);
+    im_canna_update_candwin(cn);    
+
     if( mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode ) {
-      handle_gline(cn);
-      im_canna_update_candwin(cn);
       gtk_widget_hide(cn->modewin);
       gtk_widget_show(cn->candwin);
     } else {
@@ -492,8 +495,6 @@ im_canna_set_cursor_location (GtkIMContext *context, GdkRectangle *area)
   if ( cn->client_window == NULL )
     return;
 
-  handle_gline(cn);
-  im_canna_update_candwin(cn);
   gdk_window_get_origin(cn->client_window, &x, &y);
   current_monitor = gdk_display_get_primary_monitor(gdk_display_get_default());
   gdk_monitor_get_workarea(current_monitor, &screen_area);
