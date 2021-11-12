@@ -287,7 +287,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_show_all(cn->modewin);
     } else {
       cn->ja_input_mode = FALSE;
-      im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);      
+      im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);
       gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
       gtk_widget_hide(cn->modewin);
@@ -295,18 +295,20 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     return TRUE;
   }
 
-  /*** Function mode ***/
-  mode = im_canna_get_num_of_canna_mode(cn);
-  if (mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
-    return im_canna_function_mode(context, key);
+  if( cn->ja_input_mode == FALSE ) {
+    /*** direct mode ***/
+    return im_canna_enter_direct_mode(context, key);
   }
 
-  /*** direct mode ***/
-  if( cn->ja_input_mode == FALSE )
-    return im_canna_enter_direct_mode(context, key);
+  mode = im_canna_get_num_of_canna_mode(cn);
   
-  /*** Japanese mode ***/
-  ret = im_canna_enter_japanese_mode(context, key);
+  if (mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode) {
+    /*** Function mode ***/
+    ret = im_canna_function_mode(context, key);
+  } else {
+    /*** Japanese mode ***/
+    ret = im_canna_enter_japanese_mode(context, key);
+  }
 
   /*** update cardwin & modewin ***/
   if( ret == TRUE ) {
