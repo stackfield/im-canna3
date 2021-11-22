@@ -117,3 +117,18 @@ void im_canna_kill_unspecified_string(IMContextCanna* cn)
   if(im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode)
     im_canna_force_change_mode(cn, cn->initinal_canna_mode);
 }
+
+int im_canna_connect_server(IMContextCanna* cn)
+{
+  jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
+  jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
+
+  return 0;
+}
+
+int im_canna_disconnect_server(IMContextCanna* cn)
+{
+  jrKanjiControl(cn->canna_context, KC_FINALIZE, 0);
+
+  return 0;
+}

@@ -9,5 +9,7 @@ extern void clear_preedit (IMContextCanna *cn);
 extern int im_canna_get_num_of_canna_mode(IMContextCanna* cn);
 extern void im_canna_force_change_mode(IMContextCanna* cn, int mode);
 extern void im_canna_kill_unspecified_string(IMContextCanna* cn);
+extern int im_canna_connect_server(IMContextCanna* cn);
+extern int im_canna_disconnect_server(IMContextCanna* cn);
 #endif
 
