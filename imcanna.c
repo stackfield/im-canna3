@@ -172,10 +172,8 @@ im_canna_init (GtkIMContext *im_context)
 
   clear_gline(cn);
   clear_preedit(cn);
-  
-  jrKanjiControl(cn->canna_context, KC_INITIALIZE, 0);
-  jrKanjiControl(cn->canna_context, KC_SETWIDTH, 62);
 
+  im_canna_connect_server(cn);
   cn->initinal_canna_mode = im_canna_get_num_of_canna_mode(cn);
 
   if ( cn->initinal_canna_mode == CANNA_MODE_AlphaMode ) {
@@ -184,7 +182,9 @@ im_canna_init (GtkIMContext *im_context)
 
   im_canna_create_modewin(cn);
   im_canna_create_candwin(cn);
-  
+
+  im_canna_disconnect_server(cn);
+
 #ifdef USE_KEYSNOOPER
   snooper_id = gtk_key_snooper_install((GtkKeySnoopFunc)snooper_func, NULL);
 #endif
@@ -195,7 +195,7 @@ static void
 im_canna_finalize(GObject *obj) {
   IMContextCanna* cn = IM_CONTEXT_CANNA(obj);
 
-  jrKanjiControl(cn->canna_context, KC_FINALIZE, 0);
+  im_canna_disconnect_server(cn);
 
   g_free(cn->gline_message);
   g_free(cn->modebuf_utf8);
@@ -281,15 +281,16 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     
     if( cn->ja_input_mode == FALSE ) {
       cn->ja_input_mode = TRUE;
+      im_canna_connect_server(cn);
       im_canna_force_change_mode(cn, cn->initinal_canna_mode);
       im_canna_update_modewin(cn);
       gtk_widget_show_all(cn->modewin);
     } else {
       cn->ja_input_mode = FALSE;
-      im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);
       clear_gline(cn);
-      gtk_widget_hide(cn->candwin);
       im_canna_update_modewin(cn);
+      im_canna_disconnect_server(cn);
+      gtk_widget_hide(cn->candwin);
       gtk_widget_hide(cn->modewin);
     }
     return TRUE;
@@ -328,7 +329,11 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
 
   if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
     gtk_widget_hide(cn->modewin);
+    gtk_widget_hide(cn->candwin);
     cn->ja_input_mode = FALSE;
+    clear_gline(cn);
+    clear_preedit(cn);
+    im_canna_disconnect_server(cn);
   }
 
   return ret;
@@ -442,12 +447,6 @@ im_canna_focus_in (GtkIMContext* context) {
 #ifdef USE_KEYSNOOPER  
   focused_context = context;
 #endif
-
-  if (cn->ja_input_mode == TRUE) {
-    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
-    im_canna_update_modewin(cn);
-    gtk_widget_show(cn->modewin);
-  }
 }
 
 static void
@@ -481,6 +480,9 @@ im_canna_focus_out (GtkIMContext* context) {
     im_canna_update_modewin(cn);
     gtk_widget_hide(cn->modewin);
     gtk_widget_hide(cn->candwin);
+
+    cn->ja_input_mode == FALSE;
+    im_canna_disconnect_server(cn);
   }
 }
 
