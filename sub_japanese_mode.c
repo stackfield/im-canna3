@@ -18,6 +18,7 @@ static void routine_for_preedit_signal(GtkIMContext* context) {
   cn->preedit_prevlen = cn->preedit_length;
 
   if(cn->preedit_length == 0 && prevlen > 0) {
+    g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
   } if(cn->preedit_length > 0 && prevlen == 0) {
     g_signal_emit_by_name(cn, "preedit_start");
@@ -38,10 +39,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   memset(cn->kakutei_buf, 0, BUFSIZ);
   nbytes = jrKanjiString(cn->canna_context, newinput, cn->kakutei_buf, BUFSIZ, &cn->ks);
 
-  if( cn->ks.length == -1 ) {
-    return FALSE;
-  }
-
   if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
     gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
     gchar* utf8 = euc2utf8(euc);
@@ -49,11 +46,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     cn->commit_str = g_strdup(utf8);
     g_free(utf8);
     g_free(euc);
-
-    clear_preedit(cn);
-    g_signal_emit_by_name(cn, "preedit_changed");
-
-    return TRUE;
   }
 
   handle_preedit(cn);
@@ -90,21 +82,10 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
     g_signal_emit_by_name(cn, "commit", cn->commit_str);
     g_free(cn->commit_str);
     cn->commit_str = NULL;
-
-    handle_preedit(cn);
-    routine_for_preedit_signal(cn);
-
-    return TRUE;
   }
 
-  if( cn->ks.echoStr != NULL ) {
-    if( (cn->ks.length == 0 && canna_code == 0x08) ||
-	(cn->ks.echoStr[0] != '\0' && cn->ks.length != -1) ) {
-      clear_preedit(cn);
-      handle_preedit(cn);
-      routine_for_preedit_signal(cn);
-    }
-  }
+  handle_preedit(cn);
+  routine_for_preedit_signal(cn);
 
   /*
 
