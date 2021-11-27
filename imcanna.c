@@ -274,9 +274,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     if( cn->preedit_length > 0) {
       clear_preedit(cn);
       im_canna_kill_unspecified_string(cn);
-      
-      g_signal_emit_by_name(cn, "preedit_changed");      
-      g_signal_emit_by_name(cn, "preedit_end");
+      routine_for_preedit_signal(cn);
     }
     
     if( cn->ja_input_mode == FALSE ) {
