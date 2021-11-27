@@ -719,6 +719,9 @@ AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
 AM_DEFAULT_V
 AM_V
+CSCOPE
+ETAGS
+CTAGS
 am__untar
 am__tar
 AMTAR
@@ -795,7 +798,7 @@ with_aix_soname
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
-enable_hack_for_firefox52
+enable_hack_for_firefox
 enable_keysnooper
 '
       ac_precious_vars='build_alias
@@ -1443,10 +1446,8 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
-  --enable-hack-for-firefox52
-                          enable to an action which firefox52 (or its variant)
-                          to completely able to handle backspace-key event
-                          when preedit is empty. (default=no)
+  --enable-hack-for-firefox
+                          enable hack for firefox pre-60 (default=no)
   --enable-keysnooper     enable Keysnooper function that makes key input more
                           smooth in fence mode and candinate mode.
                           (default=no)
@@ -3073,6 +3074,20 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
+
+
+# Variables for tags utilities; see am/tags.am
+if test -z "$CTAGS"; then
+  CTAGS=ctags
+fi
+
+if test -z "$ETAGS"; then
+  ETAGS=etags
+fi
+
+if test -z "$CSCOPE"; then
+  CSCOPE=cscope
+fi
 
 
 
@@ -12482,19 +12497,19 @@ else $as_nop
 fi
 
 
-# Check whether --enable-hack-for-firefox52 was given.
-if test ${enable_hack_for_firefox52+y}
+# Check whether --enable-hack-for-firefox was given.
+if test ${enable_hack_for_firefox+y}
 then :
-  enableval=$enable_hack_for_firefox52;
+  enableval=$enable_hack_for_firefox;
 else $as_nop
-  enable_hack_for_firefox52=no
+  enable_hack_for_firefox=no
 fi
 
 
-if test "x$enable_hack_for_firefox52" != xno
+if test "x$enable_hack_for_firefox" != xno
 then :
 
-printf "%s\n" "#define USE_HACK_FOR_FIREFOX52 1" >>confdefs.h
+printf "%s\n" "#define USE_HACK_FOR_FIREFOX 1" >>confdefs.h
 
 
 fi

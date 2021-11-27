@@ -59,8 +59,8 @@
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
-/* for firefox52 hack */
-#undef USE_HACK_FOR_FIREFOX52
+/* for firefox hack */
+#undef USE_HACK_FOR_FIREFOX
 
 /* enable keysnooper */
 #undef USE_KEYSNOOPER

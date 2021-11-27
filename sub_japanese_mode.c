@@ -15,8 +15,17 @@ static void routine_for_preedit_signal(GtkIMContext* context) {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   gint prevlen = cn->preedit_prevlen;
 
-  cn->preedit_prevlen = cn->preedit_length;
+#ifdef USE_HACK_FOR_FIREFOX
+  /*
+    Dirty Hack for pre-60 firefox.
+    cause to double push Control-Key input (Enter Key)
+    into some widgets and websites in firefox(and seamonkey).
+  */
+  g_signal_emit_by_name(cn, "preedit_changed");
+  return;
+#endif
 
+  cn->preedit_prevlen = cn->preedit_length;
   if(cn->preedit_length == 0 && prevlen > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
@@ -86,20 +95,6 @@ im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna
 
   handle_preedit(cn);
   routine_for_preedit_signal(cn);
-
-  /*
-
-    Dirty Hack for pre-52 firefox.
-    if a user uses backspace or Ctrl-h(Emacs Keybind) to clear a preedit,
-    firefox can't handle next backspace key.
-
-  */
-#ifdef USE_HACK_FOR_FIREFOX52
-  if(cn->kslength == 0 && canna_code == 0x08) {
-    g_signal_emit_by_name(cn, "commit", "A"); /* dummy */
-    return FALSE;
-  }
-#endif
 
   return TRUE;
 }

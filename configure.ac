@@ -45,14 +45,14 @@ AC_CHECK_HEADER(canna/jrkanji.h,,AC_MSG_ERROR(No Canna header))
 AC_CHECK_LIB(canna, jrKanjiString,, AC_MSG_ERROR(No Canna library))
 
 dnl
-AC_ARG_ENABLE([hack-for-firefox52],
-	[AS_HELP_STRING([--enable-hack-for-firefox52],
-	 [enable to an action which firefox52 (or its variant) to completely able to handle backspace-key event when preedit is empty. (default=no)])],
+AC_ARG_ENABLE([hack-for-firefox],
+	[AS_HELP_STRING([--enable-hack-for-firefox],
+	 [enable hack for firefox pre-60 (default=no)])],
 	 [],
-	 [enable_hack_for_firefox52=no])
+	 [enable_hack_for_firefox=no])
 
-AS_IF([test "x$enable_hack_for_firefox52" != xno],
-    [AC_DEFINE([USE_HACK_FOR_FIREFOX52], [1],[for firefox52 hack])]
+AS_IF([test "x$enable_hack_for_firefox" != xno],
+    [AC_DEFINE([USE_HACK_FOR_FIREFOX], [1],[for firefox hack])]
     )
 
 AC_ARG_ENABLE([keysnooper],
