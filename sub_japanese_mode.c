@@ -18,8 +18,8 @@ static void routine_for_preedit_signal(GtkIMContext* context) {
 #ifdef USE_HACK_FOR_FIREFOX
   /*
     Dirty Hack for pre-60 firefox.
-    cause to double push Control-Key input (Enter Key)
-    into some widgets and websites in firefox(and seamonkey).
+    stop to cause double push Control-Key input ( e.g. Enter Key)
+    into some widgets on websites in firefox(and seamonkey).
   */
   g_signal_emit_by_name(cn, "preedit_changed");
   return;
