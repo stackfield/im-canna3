@@ -83,7 +83,7 @@ im_canna_enter_direct_mode(GtkIMContext *context, GdkEventKey *key);
 /* sub_japanese_mode.c */
 extern gboolean
 im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key);
-
+extern void routine_for_preedit_signal(GtkIMContext* context);
 
 /*** For KeySnooper ***/
 #ifdef USE_KEYSNOOPER
@@ -256,7 +256,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   gboolean ret = FALSE;
   int mode = -1;
 
-  if( key->type == GDK_KEY_RELEASE ) {
+  if( key->type != GDK_KEY_PRESS) {
     return FALSE;
   };
 
@@ -471,7 +471,7 @@ im_canna_focus_out (GtkIMContext* context) {
       g_free(str);
       
       clear_preedit(cn);
-      g_signal_emit_by_name(cn, "preedit_end");
+      routine_for_preedit_signal(cn);
     }
 
     im_canna_kill_unspecified_string(cn);
@@ -541,7 +541,7 @@ im_canna_reset(GtkIMContext* context) {
     g_free(str);
 
     clear_preedit(cn);
-    g_signal_emit_by_name(cn, "preedit_end");
+    routine_for_preedit_signal(cn);
   }
 }
 

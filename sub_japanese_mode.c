@@ -11,7 +11,7 @@
 #include "handle_canna.h"
 #include "enc.h"
 
-static void routine_for_preedit_signal(GtkIMContext* context) {
+void routine_for_preedit_signal(GtkIMContext* context) {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   gint prevlen = cn->preedit_prevlen;
 
