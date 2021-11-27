@@ -15,6 +15,8 @@ static void routine_for_preedit_signal(GtkIMContext* context) {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   gint prevlen = cn->preedit_prevlen;
 
+  cn->preedit_prevlen = cn->preedit_length;
+
 #ifdef USE_HACK_FOR_FIREFOX
   /*
     Dirty Hack for pre-60 firefox.
@@ -25,7 +27,6 @@ static void routine_for_preedit_signal(GtkIMContext* context) {
   return;
 #endif
 
-  cn->preedit_prevlen = cn->preedit_length;
   if(cn->preedit_length == 0 && prevlen > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
