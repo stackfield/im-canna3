@@ -4,6 +4,7 @@ extern void handle_modebuf (IMContextCanna* cn);
 extern void handle_gline (IMContextCanna* cn);
 extern void clear_gline (IMContextCanna* cn);
 extern void handle_preedit (IMContextCanna *cn);
+extern void im_canna_init_preedit (IMContextCanna *cn);
 extern void clear_preedit (IMContextCanna *cn);
 
 extern int im_canna_get_num_of_canna_mode(IMContextCanna* cn);

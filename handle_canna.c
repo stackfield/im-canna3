@@ -73,13 +73,18 @@ void handle_preedit (IMContextCanna *cn)
     cn->preedit_string = g_strdup(cn->ks.echoStr);
 }
 
+void im_canna_init_preedit (IMContextCanna *cn)
+{
+  clear_preedit(cn);
+  cn->preedit_prevlen = 0;
+}
+
 void clear_preedit (IMContextCanna *cn)
 {
   if (cn->preedit_string != NULL) 
     g_free(cn->preedit_string);
 
   cn->preedit_string = NULL;
-  cn->preedit_prevlen = 0;
   cn->preedit_length = 0;
   cn->preedit_revPos = cn->preedit_revLen = 0;
 }

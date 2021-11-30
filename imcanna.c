@@ -171,7 +171,7 @@ im_canna_init (GtkIMContext *im_context)
   cn->commit_str = NULL;
 
   clear_gline(cn);
-  clear_preedit(cn);
+  im_canna_init_preedit(cn);
 
   im_canna_connect_server(cn);
   cn->initinal_canna_mode = im_canna_get_num_of_canna_mode(cn);
