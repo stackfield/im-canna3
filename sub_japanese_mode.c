@@ -32,14 +32,11 @@ void routine_for_preedit_signal(GtkIMContext* context) {
   if(cn->preedit_length == 0 && prevlen > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
-    g_printf("im-canna3: end \n");
   } else if(cn->preedit_length > 0 && prevlen == 0) {
     g_signal_emit_by_name(cn, "preedit_start");
     g_signal_emit_by_name(cn, "preedit_changed");
-    g_printf("im-canna3: start \n");
   } else if(cn->preedit_length > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
-    g_printf("im-canna3: changed \n");
   }
 
   return;
