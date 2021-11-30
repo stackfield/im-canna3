@@ -46,10 +46,10 @@ AC_CHECK_LIB(canna, jrKanjiString,, AC_MSG_ERROR(No Canna library))
 
 dnl
 AC_ARG_ENABLE([hack-for-firefox],
-	[AS_HELP_STRING([--enable-hack-for-firefox],
-	 [enable hack for firefox pre-60 (default=no)])],
+	[AS_HELP_STRING([--disable-hack-for-firefox],
+	 [disable hack for firefox pre-60 (default=yes)])],
 	 [],
-	 [enable_hack_for_firefox=no])
+	 [enable_hack_for_firefox=yes])
 
 AS_IF([test "x$enable_hack_for_firefox" != xno],
     [AC_DEFINE([USE_HACK_FOR_FIREFOX], [1],[for firefox hack])]

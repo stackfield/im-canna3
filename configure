@@ -1446,8 +1446,8 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
-  --enable-hack-for-firefox
-                          enable hack for firefox pre-60 (default=no)
+  --disable-hack-for-firefox
+                          disable hack for firefox pre-60 (default=yes)
   --enable-keysnooper     enable Keysnooper function that makes key input more
                           smooth in fence mode and candinate mode.
                           (default=no)
@@ -12502,7 +12502,7 @@ if test ${enable_hack_for_firefox+y}
 then :
   enableval=$enable_hack_for_firefox;
 else $as_nop
-  enable_hack_for_firefox=no
+  enable_hack_for_firefox=yes
 fi
 
 

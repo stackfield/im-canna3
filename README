@@ -20,10 +20,10 @@ focus in text widget, type *Shift-space or Ctrl-space or Alt-Kanji*
 if you need to kana-kanji input. Enjoy!
 
 < CONFIGURE OPTION >
-* --enable-hack-for-firefox
-    Dirty Hack for pre-60 firefox.
-    stop to cause double push Control-Key input ( e.g. Enter Key)   
-    into some widgets on websites in firefox(and seamonkey). 
+* --disable-hack-for-firefox
+Disable dirty Hack for pre-60 firefox.
+
+It treats to stop double push Control-Key input ( e.g. Enter Key) into some widgets on websites in firefox(and seamonkey).
 
 <BUGS & SUGGESTION>
 Docs and comments are in English for global developer communications.
