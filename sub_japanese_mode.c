@@ -81,7 +81,7 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
   if( canna_code != 0 )
     ret = roma2kana_canna(context, canna_code);
   else
-    ret = roma2kana_canna(context, key->keyval)
+    ret = roma2kana_canna(context, key->keyval);
 
   if( key->keyval == GDK_Home ) {
     im_canna_update_candwin(cn);
