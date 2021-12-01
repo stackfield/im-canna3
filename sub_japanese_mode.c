@@ -17,18 +17,6 @@ void routine_for_preedit_signal(GtkIMContext* context) {
 
   cn->preedit_prevlen = cn->preedit_length;
 
-#ifdef USE_HACK_FOR_FIREFOX
-  /*
-    Dirty Hack for pre-60 firefox.
-    stop to cause double push Control-Key input ( e.g. Enter Key)
-    into some widgets on websites in firefox(and seamonkey).
-  */
-  if(cn->preedit_length > 0 || prevlen > 0){
-    g_signal_emit_by_name(cn, "preedit_changed");
-  }  
-  return;
-#endif
-
   if(cn->preedit_length == 0 && prevlen > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
@@ -58,6 +46,16 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     cn->commit_str = g_strdup(utf8);
     g_free(utf8);
     g_free(euc);
+
+    g_signal_emit_by_name(cn, "commit", cn->commit_str);
+    g_free(cn->commit_str);
+    cn->commit_str = NULL;
+
+    if( cn->ks.length <= 0 ) {
+      clear_preedit(cn);
+      routine_for_preedit_signal(cn);
+      return TRUE;
+    }
   }
 
   handle_preedit(cn);
@@ -135,14 +133,8 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
   }
 
   /* Pass char to Canna, anyway */  
-  if(roma2kana_canna(context, key->keyval) ) {
-    if (cn->commit_str != NULL) {
-      g_signal_emit_by_name(cn, "commit", cn->commit_str);
-      g_free(cn->commit_str);
-      cn->commit_str = NULL;
-    }
+  if(roma2kana_canna(context, key->keyval))
     return TRUE;
-  }
 
   return FALSE;
 }
