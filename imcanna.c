@@ -310,20 +310,17 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   }
 
   /*** update cardwin & modewin ***/
-  if( ret == TRUE ) {
-    mode = im_canna_get_num_of_canna_mode(cn);
+  handle_gline(cn);
 
-    handle_gline(cn);
-    im_canna_update_candwin(cn);    
-
-    if( mode >= CANNA_MODE_HexMode || mode == CANNA_MODE_KigoMode ) {
-      gtk_widget_hide(cn->modewin);
-      gtk_widget_show(cn->candwin);
-    } else {
-      im_canna_update_modewin(cn);
-      gtk_widget_show(cn->modewin);
-    }
+  if ((cn->gline_length > 0)) {
+    im_canna_update_candwin(cn);
+    gtk_widget_show(cn->candwin);
+  } else {
+    gtk_widget_hide(cn->candwin);
   }
+    
+  im_canna_update_modewin(cn);
+  gtk_widget_show(cn->modewin);
 
   if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
     gtk_widget_hide(cn->modewin);
