@@ -20,6 +20,7 @@ void routine_for_preedit_signal(GtkIMContext* context) {
   if(cn->preedit_length == 0 && prevlen > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
+    printf("AA\n");
   } else if(cn->preedit_length > 0 && prevlen == 0) {
     g_signal_emit_by_name(cn, "preedit_start");
     g_signal_emit_by_name(cn, "preedit_changed");
@@ -50,12 +51,6 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
     g_signal_emit_by_name(cn, "commit", cn->commit_str);
     g_free(cn->commit_str);
     cn->commit_str = NULL;
-
-    if( cn->ks.length <= 0 ) {
-      clear_preedit(cn);
-      routine_for_preedit_signal(cn);
-      return TRUE;
-    }
   }
 
   handle_preedit(cn);

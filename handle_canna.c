@@ -61,6 +61,11 @@ void handle_preedit (IMContextCanna *cn)
   if (cn->ks.length < 0)
     return;
 
+  if (cn->ks.length == 0) {
+    clear_preedit(cn);
+    return;
+  }
+
   if (cn->preedit_string != NULL)
     g_free(cn->preedit_string);
 
