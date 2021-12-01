@@ -89,6 +89,16 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
     }
     
     return TRUE;
+  } else {
+    gint nbytes;
+
+    nbytes = jrKanjiString(cn->canna_context, key->keyval, cn->kakutei_buf, BUFSIZ, &cn->ks);
+
+    handle_gline(cn);
+    if(cn->gline_length > 0) {
+      im_canna_update_candwin(cn);
+    }
   }
+  
   return TRUE;
 }
