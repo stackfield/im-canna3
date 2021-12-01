@@ -58,47 +58,12 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
   return TRUE;
 }
 
-static gboolean
-im_canna_handle_special_key_in_japanese_mode(GtkIMContext *context, guchar canna_code)
-{
-  IMContextCanna *cn = IM_CONTEXT_CANNA(context);
-  gint nbytes;
-	
-  memset(cn->kakutei_buf, 0, BUFSIZ);
-  nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
-
-  if( strlen(cn->kakutei_buf) == 1 && cn->kakutei_buf[0] == canna_code ) {
-    cn->kakutei_buf[0] = '\0';
-  }
-
-  /* for committing string written in front of cursor (e.g. Ctrl-J), */
-  /* and kakutei_key (e.g. Ctrl-M and Enter Key). */
-  /* NAKAI */
-  if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20) ) {
-    gchar* euc = g_strndup(cn->kakutei_buf, nbytes);
-    gchar* utf8 = euc2utf8(euc);
-
-    g_free(cn->commit_str);
-    cn->commit_str = g_strdup(utf8);
-    g_free(utf8);
-    g_free(euc);
-	
-    g_signal_emit_by_name(cn, "commit", cn->commit_str);
-    g_free(cn->commit_str);
-    cn->commit_str = NULL;
-  }
-
-  handle_preedit(cn);
-  routine_for_preedit_signal(cn);
-
-  return TRUE;
-}
-
 gboolean
 im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   guchar canna_code = 0;
+  gboolean ret = FALSE;
 
   /* No preedit char yet */
   if( cn->ks.length == 0 ) {
@@ -113,22 +78,15 @@ im_canna_enter_japanese_mode(GtkIMContext *context, GdkEventKey *key)
 
   canna_code = get_canna_keysym(key->keyval, key->state);
 
-  if( canna_code != 0 ) {
-    gboolean ret;
-    
-    ret = im_canna_handle_special_key_in_japanese_mode(context, canna_code);
+  if( canna_code != 0 )
+    ret = roma2kana_canna(context, canna_code);
+  else
+    ret = roma2kana_canna(context, key->keyval)
 
-    if( key->keyval == GDK_Home ) {
-      im_canna_update_candwin(cn);
-      gtk_widget_show(cn->candwin);
-    }
-    
-    return ret;
+  if( key->keyval == GDK_Home ) {
+    im_canna_update_candwin(cn);
+    gtk_widget_show(cn->candwin);
   }
 
-  /* Pass char to Canna, anyway */  
-  if(roma2kana_canna(context, key->keyval))
-    return TRUE;
-
-  return FALSE;
+  return ret;
 }
