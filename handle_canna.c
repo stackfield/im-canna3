@@ -62,7 +62,9 @@ void handle_preedit (IMContextCanna *cn)
     return;
 
   if (cn->ks.length == 0) {
+    int prevlen = cn->preedit_length;
     clear_preedit(cn);
+    cn->preedit_prevlen = prevlen;
     return;
   }
 

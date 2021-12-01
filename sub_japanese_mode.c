@@ -15,16 +15,17 @@ void routine_for_preedit_signal(GtkIMContext* context) {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
   gint prevlen = cn->preedit_prevlen;
 
-  cn->preedit_prevlen = cn->preedit_length;
-
   if(cn->preedit_length == 0 && prevlen > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
     g_signal_emit_by_name(cn, "preedit_end");
+    printf("end\n");
   } else if(cn->preedit_length > 0 && prevlen == 0) {
     g_signal_emit_by_name(cn, "preedit_start");
     g_signal_emit_by_name(cn, "preedit_changed");
+    printf("start\n");
   } else if(cn->preedit_length > 0) {
     g_signal_emit_by_name(cn, "preedit_changed");
+    printf("change\n");
   }
 
   return;
