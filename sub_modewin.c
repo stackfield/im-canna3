@@ -69,23 +69,26 @@ void im_canna_update_modewin(IMContextCanna* cn) {
 
 void im_canna_move_modewin(IMContextCanna* cn)
 {
-  GdkRectangle screen_area;
-  GdkMonitor *current_monitor;
-  gint x, y, width, height;
-  
-  current_monitor = gdk_display_get_primary_monitor(gdk_display_get_default());
-  gdk_monitor_get_workarea(current_monitor, &screen_area);
+  GdkScreen* screen;
+  gint x, y, width, height, scr_width, scr_height;
+
+  if ( cn->client_window == NULL )
+    return;
+
+  screen = gdk_drawable_get_screen (cn->client_window);
+  scr_width  = gdk_screen_get_width  (screen);
+  scr_height = gdk_screen_get_height (screen);
 
   x = 0;
-  y = screen_area.height;
+  y = scr_height;
   
   gtk_window_get_size(GTK_WINDOW(cn->modewin), &width, &height);
 
-  if (x + width >= screen_area.width)
-    x = width - screen_area.width;
+  if (x + width >= scr_width)
+    x = width - scr_width;
   
-  if (y + height > screen_area.height)
-    y = screen_area.height - height;
+  if (y + height > scr_height)
+    y = scr_height - height;
 
   gtk_window_move(GTK_WINDOW(cn->modewin), x, y);
 }
