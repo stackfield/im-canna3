@@ -470,7 +470,7 @@ im_canna_focus_out (GtkIMContext* context) {
     }
 
     im_canna_kill_unspecified_string(cn);
-    
+
     clear_gline(cn);
     im_canna_update_modewin(cn);
     gtk_widget_hide(cn->modewin);
@@ -485,27 +485,31 @@ static void
 im_canna_set_cursor_location (GtkIMContext *context, GdkRectangle *area)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
-  GdkRectangle screen_area;
-  GdkMonitor *current_monitor;
-  gint x, y;
+  GdkScreen* screen;
+  gint scr_width, scr_height;
+  gint x, y, candwin_width, candwin_height;
 
   if ( cn->client_window == NULL )
     return;
+  
+  screen = gdk_drawable_get_screen (cn->client_window);
+  scr_width  = gdk_screen_get_width  (screen);
+  scr_height = gdk_screen_get_height (screen);
 
   gdk_window_get_origin(cn->client_window, &x, &y);
-  current_monitor = gdk_display_get_primary_monitor(gdk_display_get_default());
-  gdk_monitor_get_workarea(current_monitor, &screen_area);
+  gtk_window_get_size(GTK_WINDOW(cn->candwin),
+		      &candwin_width, &candwin_height);
 
   cn->candwin_area.x = x + area->x - 128;
   cn->candwin_area.y = y + area->y + area->height;
   
   if (cn->candwin_area.x < 0)
     cn->candwin_area.x = 0;
-  if (cn->candwin_area.x + cn->candwin_area.width >= screen_area.width)
-    cn->candwin_area.x = screen_area.width - cn->candwin_area.width;
+  if (cn->candwin_area.x + candwin_width >= scr_width)
+    cn->candwin_area.x = scr_width - candwin_width;
   
-  if (cn->candwin_area.y + cn->candwin_area.height > screen_area.height)
-    cn->candwin_area.y = screen_area.height - cn->candwin_area.height;
+  if (cn->candwin_area.y + cn->candwin_area.height > scr_height)
+    cn->candwin_area.y = scr_height - candwin_height;
   
   gtk_window_move(GTK_WINDOW(cn->candwin),
 		  cn->candwin_area.x,
