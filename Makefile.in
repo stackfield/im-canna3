@@ -358,7 +358,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-moduledir = ${libdir}/gtk-2.0/@GTK_VERSION@/immodules
+moduledir = ${libdir}/gtk-3.0/@GTK_VERSION@/immodules
 
 #SUBDIRS = po
 AM_CPPFLAGS = @GTK_DEP_CFLAGS@ -DIM_LOCALEDIR=\"${datadir}/locale\"
@@ -390,7 +390,7 @@ im_canna_la_LIBADD = $(LDADDS)
 module_LTLIBRARIES = \
 	im-canna.la
 
-module_list = ${libdir}/gtk-2.0/@GTK_VERSION@/immodules.cache
+module_list = ${libdir}/gtk-3.0/@GTK_VERSION@/immodules.cache
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -919,13 +919,13 @@ uninstall-am: uninstall-moduleLTLIBRARIES
 
 
 gtk.immodules: Makefile.am $(module_LTLIBRARIES)
-	${bindir}/gtk-query-immodules-2.0 *.la > gtk.immodules
+	${bindir}/gtk-query-immodules-3.0 *.la > gtk.immodules
 
 #all-local: gtk.immodules
 
 # For cut the cost on the install process
 install-etc:
-	${bindir}/gtk-query-immodules-2.0 > ${module_list}
+	${bindir}/gtk-query-immodules-3.0 > ${module_list}
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -1,4 +1,4 @@
-moduledir = ${libdir}/gtk-2.0/@GTK_VERSION@/immodules
+moduledir = ${libdir}/gtk-3.0/@GTK_VERSION@/immodules
 
 #SUBDIRS = po
 
@@ -36,13 +36,13 @@ im_canna_la_LIBADD = $(LDADDS)
 module_LTLIBRARIES =				\
 	im-canna.la
 
-module_list = ${libdir}/gtk-2.0/@GTK_VERSION@/immodules.cache
+module_list = ${libdir}/gtk-3.0/@GTK_VERSION@/immodules.cache
 
 gtk.immodules: Makefile.am $(module_LTLIBRARIES)
-	${bindir}/gtk-query-immodules-2.0 *.la > gtk.immodules
+	${bindir}/gtk-query-immodules-3.0 *.la > gtk.immodules
 
 #all-local: gtk.immodules
 
 # For cut the cost on the install process
 install-etc:
-	${bindir}/gtk-query-immodules-2.0 > ${module_list}
+	${bindir}/gtk-query-immodules-3.0 > ${module_list}

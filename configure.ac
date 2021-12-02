@@ -22,9 +22,9 @@ AC_SUBST(ALL_LINGUAS)
 #AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 #AM_GLIB_GNU_GETTEXT
 
-GTK_DEP_CFLAGS=`pkg-config gtk+-2.0 --cflags`
-GTK_DEP_LIBS=`pkg-config gtk+-2.0 --libs`
-GTK_VERSION=`pkg-config gtk+-2.0 --variable=gtk_binary_version`
+GTK_DEP_CFLAGS=`pkg-config gtk+-3.0 --cflags`
+GTK_DEP_LIBS=`pkg-config gtk+-3.0 --libs`
+GTK_VERSION=`pkg-config gtk+-3.0 --variable=gtk_binary_version`
 AC_SUBST(GTK_DEP_CFLAGS)
 AC_SUBST(GTK_DEP_LIBS)
 AC_SUBST(GTK_VERSION)
