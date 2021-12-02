@@ -16,7 +16,7 @@ Don't expect this will work for you.
 ABSOLUTELY NO WARRANTY
 
 <HOW TO TEST AND USE>
-$ GTK_IM_MODULE=Canna gtk3-demo
+$ GTK_IM_MODULE=Canna gtk-demo
 focus in text widget, type *Shift-space or Ctrl-space or Alt-Kanji*
 if you need to kana-kanji input. Enjoy!
 
