@@ -269,7 +269,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   /* Editable widget should pass mnemonic if ja-input-mode is on */
   g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
 		    (gpointer)cn->ja_input_mode);
-  
+
   if (im_canna_is_modechangekey(context, key)) {    
     if( cn->preedit_length > 0) {
       clear_preedit(cn);
@@ -292,6 +292,14 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_hide(cn->modewin);
     }
     return TRUE;
+  }
+
+  if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
+    if( cn->ja_input_mode == TRUE ) {
+      im_canna_force_change_mode(cn, cn->initinal_canna_mode);
+      im_canna_update_modewin(cn);
+      gtk_widget_show_all(cn->modewin);
+    }
   }
 
   if( cn->ja_input_mode == FALSE ) {
@@ -442,6 +450,13 @@ im_canna_focus_in (GtkIMContext* context) {
 #ifdef USE_KEYSNOOPER  
   focused_context = context;
 #endif
+  
+  if (cn->ja_input_mode == TRUE) {    
+    im_canna_connect_server(cn);
+    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
+    im_canna_update_modewin(cn);
+    gtk_widget_show_all(cn->modewin);
+  }  
 }
 
 static void
@@ -476,7 +491,6 @@ im_canna_focus_out (GtkIMContext* context) {
     gtk_widget_hide(cn->modewin);
     gtk_widget_hide(cn->candwin);
 
-    cn->ja_input_mode == FALSE;
     im_canna_disconnect_server(cn);
   }
 }
