@@ -528,7 +528,6 @@ im_canna_focus_out (GtkIMContext* context) {
       g_signal_emit_by_name(cn, "commit", str);
       g_free(str);
 
-      im_canna_kill_unspecified_string(cn);
       clear_preedit(cn);
       routine_for_preedit_signal(cn);
     }
@@ -593,8 +592,6 @@ im_canna_reset(GtkIMContext* context) {
     g_signal_emit_by_name(cn, "commit", str);
     g_free(str);
 
-    im_canna_kill_unspecified_string(cn);
- 
     clear_preedit(cn);
     routine_for_preedit_signal(cn);
   }
