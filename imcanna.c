@@ -46,7 +46,7 @@
 #define BUFSIZ 1024
 #endif
 
-#define KEY_TIMEOUT (10 * 1000) /* sec * millsec */
+#define KEY_TIMEOUT (1 * 1000) /* sec * millsec */
 
 GType type_canna = 0;
 
