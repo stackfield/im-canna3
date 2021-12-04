@@ -50,6 +50,7 @@ typedef struct _IMContextCanna {
   GdkRectangle candwin_area;
 
   gchar *commit_str;
+  gchar* modebuf;
   gchar* modebuf_utf8;
 
   gchar *preedit_string;
@@ -66,7 +67,7 @@ typedef struct _IMContextCanna {
   int initinal_canna_mode;
 
   uint prevkeytime;
-  gchar *mode_string;
+  gchar *init_mode_string;
 } IMContextCanna;
 
 typedef struct _IMContextCannaClass {

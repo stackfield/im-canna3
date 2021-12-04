@@ -20,7 +20,10 @@ void handle_modebuf (IMContextCanna* cn) {
   
   cn->modebuf_utf8 = euc2utf8(modebuf);
 
-  g_free(modebuf);
+  if( cn->modebuf != NULL )
+    g_free(cn->modebuf);
+
+  cn->modebuf = modebuf;
 }
 
 void handle_gline (IMContextCanna* cn)

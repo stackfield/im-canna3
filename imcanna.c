@@ -210,7 +210,7 @@ im_canna_init (GtkIMContext *im_context)
     cn->initinal_canna_mode = CANNA_MODE_HenkanMode;
   }
 
-  im_canna_get_string_of_canna_mode(cn, &cn->mode_string);
+  im_canna_get_string_of_canna_mode(cn, &cn->init_mode_string);
 
   im_canna_create_modewin(cn);
   im_canna_create_candwin(cn);
@@ -229,7 +229,8 @@ im_canna_finalize(GObject *obj) {
 
   im_canna_disconnect_server(cn);
 
-  g_free(cn->mode_string);
+  g_free(cn->modebuf);
+  g_free(cn->init_mode_string);
   g_free(cn->gline_message);
   g_free(cn->modebuf_utf8);
   g_free(cn->commit_str);
@@ -329,9 +330,8 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       if( cn->preedit_length == 0 && cn->gline_length == 0 ) {
 	gchar *current_mode = NULL;
 
-        im_canna_get_string_of_canna_mode(cn, &current_mode);
-
-	if( cn->ja_input_mode == TRUE && strcmp(cn->mode_string, current_mode) == 0 ) {
+	if( cn->ja_input_mode == TRUE &&
+	    strcmp(cn->init_mode_string, cn->modebuf) == 0 ) {
 	  int mode = im_canna_get_num_of_canna_mode(cn);
 	  im_canna_disable_ja_input_mode(context);
 	  im_canna_enable_ja_input_mode_with_mode(context, mode);
@@ -345,6 +345,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
 
   if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
     if( cn->ja_input_mode == TRUE ) {
+      im_canna_disable_ja_input_mode(context);
       im_canna_enable_ja_input_mode(context);
       gtk_widget_show_all(cn->modewin);
     }
