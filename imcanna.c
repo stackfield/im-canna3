@@ -328,13 +328,10 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     if( key->time - cn->prevkeytime >= KEY_TIMEOUT ||
 	cn->prevkeytime < key->time ) {
       if( cn->preedit_length == 0 && cn->gline_length == 0 ) {
-	gchar *current_mode = NULL;
-
 	if( cn->ja_input_mode == TRUE &&
 	    strcmp(cn->init_mode_string, cn->modebuf) == 0 ) {
-	  int mode = im_canna_get_num_of_canna_mode(cn);
 	  im_canna_disable_ja_input_mode(context);
-	  im_canna_enable_ja_input_mode_with_mode(context, mode);
+	  im_canna_enable_ja_input_mode(context);
 	  gtk_widget_show_all(cn->modewin);
 	}
 
