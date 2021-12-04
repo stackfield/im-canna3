@@ -338,8 +338,8 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     }
   }
 
-  if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
-    if( cn->ja_input_mode == TRUE ) {
+  if( cn->ja_input_mode == TRUE ) {
+    if( im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode ) {
       im_canna_disable_ja_input_mode(context);
       im_canna_enable_ja_input_mode(context);
       gtk_widget_show_all(cn->modewin);
