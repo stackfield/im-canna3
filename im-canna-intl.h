@@ -64,6 +64,9 @@ typedef struct _IMContextCanna {
   gint gline_revPos, gline_revLen;
 
   int initinal_canna_mode;
+
+  uint prevkeytime;
+  gchar *mode_string;
 } IMContextCanna;
 
 typedef struct _IMContextCannaClass {

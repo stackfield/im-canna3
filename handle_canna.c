@@ -13,10 +13,8 @@ void handle_modebuf (IMContextCanna* cn) {
   int len = 0;
   gchar* modebuf = NULL;
 
-  len = jrKanjiControl(cn->canna_context, KC_QUERYMAXMODESTR, 0);
-  modebuf = g_new0(gchar, len+1);
-  jrKanjiControl(cn->canna_context, KC_QUERYMODE, modebuf);
-  
+  im_canna_get_string_of_canna_mode(cn, &modebuf);
+
   if(cn->modebuf_utf8 != NULL)
     g_free(cn->modebuf_utf8);
   
@@ -94,6 +92,18 @@ void clear_preedit (IMContextCanna *cn)
   cn->preedit_string = NULL;
   cn->preedit_length = 0;
   cn->preedit_revPos = cn->preedit_revLen = 0;
+}
+
+void
+im_canna_get_string_of_canna_mode (IMContextCanna* cn, gchar **ret_string) {
+  int len = 0;
+  gchar* modebuf = NULL;
+
+  len = jrKanjiControl(cn->canna_context, KC_QUERYMAXMODESTR, 0);
+  modebuf = g_new0(gchar, len+1);
+  jrKanjiControl(cn->canna_context, KC_QUERYMODE, modebuf);
+
+  *ret_string = modebuf;
 }
 
 int
