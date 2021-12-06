@@ -327,14 +327,15 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   } else {
     if( key->time - cn->prevkeytime >= KEY_TIMEOUT ||
 	cn->prevkeytime < key->time ) {
-      if( cn->preedit_length == 0 && cn->gline_length == 0 ) {
-	if( cn->ja_input_mode == TRUE &&
-	    strcmp(cn->init_mode_string, cn->modebuf) == 0 ) {
-	  im_canna_disable_ja_input_mode(context);
-	  im_canna_enable_ja_input_mode(context);
-	  gtk_widget_show_all(cn->modewin);
+      if( cn->ja_input_mode == TRUE )
+	if( cn->preedit_length == 0 && cn->gline_length == 0 ) {
+	  if( strcmp(cn->init_mode_string, cn->modebuf) == 0 ||
+	      cn->prevkeytime == 0 ) {
+	    im_canna_disable_ja_input_mode(context);
+	    im_canna_enable_ja_input_mode(context);
+	    gtk_widget_show_all(cn->modewin);
+	  }
 	}
-      }
     }
   }
 
@@ -525,9 +526,11 @@ im_canna_focus_out (GtkIMContext* context) {
 
       clear_preedit(cn);
       routine_for_preedit_signal(context);
+      im_canna_kill_unspecified_string(cn);
     }
 
     cn->prevkeytime = 0;
+    
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
   }
@@ -590,10 +593,10 @@ im_canna_reset(GtkIMContext* context) {
 
       clear_preedit(cn);
       routine_for_preedit_signal(context);
+      im_canna_kill_unspecified_string(cn);
     }
     
     cn->prevkeytime = 0;
-    gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
   }
 }
