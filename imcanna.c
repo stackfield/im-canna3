@@ -496,11 +496,10 @@ im_canna_focus_in (GtkIMContext* context) {
 #ifdef USE_KEYSNOOPER  
   focused_context = context;
 #endif
-  
+
   if (cn->ja_input_mode == TRUE) {
-    im_canna_enable_ja_input_mode(context);
-    gtk_widget_show_all(cn->modewin);
-  }  
+    gtk_widget_show(GTK_WIDGET(cn->modewin));
+  }
 }
 
 static void
@@ -528,7 +527,7 @@ im_canna_focus_out (GtkIMContext* context) {
       routine_for_preedit_signal(context);
     }
 
-    im_canna_disconnect_server(cn);
+    cn->prevkeytime = 0;
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
   }
@@ -592,8 +591,10 @@ im_canna_reset(GtkIMContext* context) {
       clear_preedit(cn);
       routine_for_preedit_signal(context);
     }
-    im_canna_disable_ja_input_mode(context);
-    im_canna_enable_ja_input_mode(context);
+    
+    cn->prevkeytime = 0;
+    gtk_widget_hide(GTK_WIDGET(cn->modewin));
+    gtk_widget_hide(GTK_WIDGET(cn->candwin));
   }
 }
 
