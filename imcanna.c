@@ -595,7 +595,5 @@ im_canna_reset(GtkIMContext* context) {
     im_canna_disable_ja_input_mode(context);
     im_canna_enable_ja_input_mode(context);
   }
-
-  printf("AA\n");
 }
 
