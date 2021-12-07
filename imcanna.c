@@ -291,6 +291,9 @@ im_canna_is_need_reconnect_for_time(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
 
+  if( cn->ja_input_mode == FALSE )
+    return FALSE;
+
   if( key->time - cn->prevkeytime <= KEY_TIMEOUT)
     return FALSE;
 
