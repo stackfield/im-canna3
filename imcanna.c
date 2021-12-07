@@ -317,10 +317,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     return FALSE;
   };
 
-  /* Editable widget should pass mnemonic if ja-input-mode is on */
-  g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
-		    (gpointer)cn->ja_input_mode);
-
   if (im_canna_is_modechangekey(context, key)) {    
     if( cn->preedit_length > 0) {
       clear_preedit(cn);
@@ -338,6 +334,10 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
       gtk_widget_hide(GTK_WIDGET(cn->candwin));
       gtk_widget_hide(GTK_WIDGET(cn->modewin));
     }
+
+    /* Editable widget should pass mnemonic if ja-input-mode is on */
+    g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
+		      (gpointer)cn->ja_input_mode);
 
     return TRUE;
   } else {
