@@ -297,10 +297,10 @@ im_canna_is_need_reconnect_for_time(GtkIMContext *context, GdkEventKey *key)
   if( key->time - cn->prevkeytime <= KEY_TIMEOUT)
     return FALSE;
 
-  if( cn->preedit_length != 0 && cn->gline_length != 0 )
+  if(cn->preedit_length > 0 || cn->gline_length > 0)
     return FALSE;
 
-  if( strcmp(cn->init_mode_string, cn->modebuf ) != 0 )
+  if(strcmp(cn->init_mode_string, cn->modebuf ) != 0)
     return FALSE;
 
   return TRUE;
