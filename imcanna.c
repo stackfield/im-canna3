@@ -295,12 +295,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     return FALSE;
   };
 
-  /* Canna can't handle key with mod* key. */
-#define GDK_MOD_MASK (GDK_MOD1_MASK | GDK_MOD2_MASK | GDK_MOD3_MASK \
-		      | GDK_MOD4_MASK | GDK_MOD5_MASK)
-  if (key->state & GDK_MOD_MASK)
-      return FALSE;
-
   /* Editable widget should pass mnemonic if ja-input-mode is on */
   g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
 		    (gpointer)cn->ja_input_mode);
@@ -353,6 +347,12 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     cn->prevkeytime = 0;
     return im_canna_enter_direct_mode(context, key);
   }
+
+  /* Canna can't handle key with mod* key. */
+#define GDK_MOD_MASK (GDK_MOD1_MASK | GDK_MOD2_MASK | GDK_MOD3_MASK \
+		      | GDK_MOD4_MASK | GDK_MOD5_MASK)
+  if (key->state & GDK_MOD_MASK)
+      return FALSE;
 
   mode = im_canna_get_num_of_canna_mode(cn);
   
