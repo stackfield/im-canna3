@@ -529,8 +529,8 @@ im_canna_focus_out (GtkIMContext* context) {
       routine_for_preedit_signal(context);
     }
 
-    im_canna_disable_ja_input_mode(context);
-    im_canna_enable_ja_input_mode(context);
+    clear_gline(cn);
+    cn->prevkeytime = 0;
 
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
@@ -596,8 +596,8 @@ im_canna_reset(GtkIMContext* context) {
       routine_for_preedit_signal(context);
     }
 
-    im_canna_disable_ja_input_mode(context);
-    im_canna_enable_ja_input_mode(context);
+    clear_gline(cn);
+    cn->prevkeytime = 0;
 
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
