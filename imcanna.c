@@ -617,8 +617,6 @@ im_canna_reset(GtkIMContext* context) {
     clear_gline(cn);
     cn->need_canna_reset = TRUE;
 
-    gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
   }
 }
-
