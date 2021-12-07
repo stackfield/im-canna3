@@ -383,6 +383,8 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     clear_gline(cn);
     clear_preedit(cn);
     im_canna_disconnect_server(cn);
+    cn->prevkeytime = 0;
+    return ret;
   }
 
   cn->prevkeytime = key->time;
