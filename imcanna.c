@@ -596,27 +596,4 @@ im_canna_set_cursor_location (GtkIMContext *context, GdkRectangle *area)
 static void
 im_canna_reset(GtkIMContext* context) {
   IMContextCanna* cn = (IMContextCanna*)context;
-
-  if (cn->ja_input_mode == TRUE) {
-    if(cn->preedit_length > 0) {
-      gchar* str = NULL;
-      
-      if(cn->commit_str != NULL) {
-	g_free(cn->commit_str);
-	cn->commit_str = NULL;
-      }
-
-      str = euc2utf8(cn->preedit_string);
-      g_signal_emit_by_name(cn, "commit", str);
-      g_free(str);
-
-      clear_preedit(cn);
-      routine_for_preedit_signal(context);
-    }
-
-    clear_gline(cn);
-    cn->need_canna_reset = TRUE;
-
-    gtk_widget_hide(GTK_WIDGET(cn->candwin));
-  }
 }
