@@ -290,13 +290,13 @@ im_canna_is_need_reconnect_for_time(GtkIMContext *context, GdkEventKey *key)
 {
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
 
-  if (key->time - cn->prevkeytime <= KEY_TIMEOUT || cn->prevkeytime != 0 )
+  if( key->time - cn->prevkeytime <= KEY_TIMEOUT)
     return FALSE;
 
-  if (cn->preedit_length != 0 && cn->gline_length != 0 )
+  if( cn->preedit_length != 0 && cn->gline_length != 0 )
     return FALSE;
 
-  if (strcmp(cn->init_mode_string, cn->modebuf != 0))
+  if( strcmp(cn->init_mode_string, cn->modebuf ) != 0 )
     return FALSE;
 
   return TRUE;
@@ -339,7 +339,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
   } else {
     if( cn->ja_input_mode == TRUE ) {
       if( cn->need_canna_reset == TRUE ||
-	  im_canna_is_need_reconnect_for_time(context, key) ) {
+	  im_canna_is_need_reconnect_for_time(context, key) == TRUE ) {
 	cn->need_canna_reset = FALSE;
 	im_canna_disable_ja_input_mode(context);
 	im_canna_enable_ja_input_mode(context);
