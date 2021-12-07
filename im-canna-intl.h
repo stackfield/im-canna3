@@ -66,8 +66,7 @@ typedef struct _IMContextCanna {
 
   int initinal_canna_mode;
 
-  gboolean need_canna_reset;
-  uint prevkeytime;
+  gint64 prev_connect_time;
   gchar *init_mode_string;
 } IMContextCanna;
 
