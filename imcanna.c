@@ -517,6 +517,7 @@ im_canna_focus_in (GtkIMContext* context) {
 #endif
 
   if (cn->ja_input_mode == TRUE) {
+    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
     im_canna_update_modewin(cn);
     gtk_widget_show(GTK_WIDGET(cn->modewin));
   }
