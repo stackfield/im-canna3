@@ -510,6 +510,9 @@ im_canna_focus_in (GtkIMContext* context) {
 #ifdef USE_KEYSNOOPER  
   focused_context = context;
 #endif
+  if (cn->ja_input_mode == TRUE) {
+    gtk_widget_show(GTK_WIDGET(cn->modewin));
+  }
 }
 
 static void
@@ -535,12 +538,20 @@ im_canna_focus_out (GtkIMContext* context) {
 
       clear_preedit(cn);
       routine_for_preedit_signal(context);
+      im_canna_kill_unspecified_string(cn);
     }
 
-    im_canna_disable_ja_input_mode(context);
+    clear_gline(cn);
+    
+    if( im_canna_get_num_of_canna_mode(cn) == cn->initinal_canna_mode ) {
+      im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);
+    }
 
-    gtk_widget_hide(GTK_WIDGET(cn->modewin));
+    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
+    im_canna_update_modewin(cn);
+
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
+    gtk_widget_hide(GTK_WIDGET(cn->modewin));
   }
 }
 
@@ -586,30 +597,16 @@ static void
 im_canna_reset(GtkIMContext* context) {
   IMContextCanna* cn = (IMContextCanna*)context;
 
-  if (cn->ja_input_mode == TRUE) {    
+  if( cn->ja_input_mode == TRUE ) {    
     if(cn->preedit_length > 0) {
-      gchar* str = NULL;
-      
-      if(cn->commit_str != NULL) {
-	g_free(cn->commit_str);
-	cn->commit_str = NULL;
-      }
-
-      str = euc2utf8(cn->preedit_string);
-      g_signal_emit_by_name(cn, "commit", str);
-      g_free(str);
-
       clear_preedit(cn);
       routine_for_preedit_signal(context);
       im_canna_kill_unspecified_string(cn);
     }
 
-    clear_gline(cn);
-    if( im_canna_get_num_of_canna_mode(cn) == cn->initinal_canna_mode ) {
-      im_canna_force_change_mode(cn, CANNA_MODE_AlphaMode);
+    if( cn->gline_length > 0 ) {
+      clear_gline(cn);
+      gtk_widget_hide(GTK_WIDGET(cn->candwin));
     }
-
-    im_canna_force_change_mode(cn, cn->initinal_canna_mode);
-    im_canna_update_modewin(cn);
   }
 }
