@@ -23,6 +23,45 @@ void im_canna_create_modewin(IMContextCanna* cn) {
   im_canna_update_modewin(cn);
 }
 
+void im_canna_show_message_modewin(IMContextCanna* cn, gchar *str) {
+  PangoAttrList* attrs;
+  PangoAttribute* attr;
+
+  /*
+     Hide when the candidate window is up.
+     The mode window should play the secondary role while the candidate
+     window plays the leading role, because candidate window has more
+     important info for user input.
+   */
+  /*
+  if(gtk_widget_get_visible(cn->candwin)) {
+    gtk_widget_hide(cn->modewin);
+  }
+  */
+
+  gtk_label_set_label(GTK_LABEL(cn->modelabel),
+		      str);
+  
+  /* Set Mode Window Background Color to Blue */
+  attrs = gtk_label_get_attributes(GTK_LABEL(cn->modelabel));
+
+  attrs = pango_attr_list_new();
+  attr = pango_attr_background_new(0xDB00, 0xE900, 0xFF00);
+  attr->start_index = 0;
+  attr->end_index = strlen(cn->modebuf_utf8);
+  pango_attr_list_insert(attrs, attr);
+  
+  gtk_label_set_attributes(GTK_LABEL(cn->modelabel), attrs);
+  /* - Coloring Done - */
+  if( attrs ) {
+    pango_attr_list_unref(attrs);
+  }
+
+  gtk_window_resize (GTK_WINDOW(cn->modewin), 1, 1);
+  im_canna_move_modewin(cn);
+  gtk_widget_show(cn->modelabel);
+}
+
 void im_canna_update_modewin(IMContextCanna* cn) {
   PangoAttrList* attrs;
   PangoAttribute* attr;
@@ -41,12 +80,13 @@ void im_canna_update_modewin(IMContextCanna* cn) {
 
   handle_modebuf(cn);
 
-  if(cn->modebuf_utf8 == NULL)
+  if(cn->modebuf_utf8 == NULL) {
     cn->modebuf_utf8 = g_strdup("");
-  
+  }
+    
   gtk_label_set_label(GTK_LABEL(cn->modelabel),
 		      cn->modebuf_utf8);
-
+  
   /* Set Mode Window Background Color to Blue */
   attrs = gtk_label_get_attributes(GTK_LABEL(cn->modelabel));
 
