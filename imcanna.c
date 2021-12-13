@@ -203,6 +203,12 @@ im_canna_init (GtkIMContext *im_context)
   cn->prev_connect_time = 0;
   cn->need_to_reset_canna = FALSE;
 
+  if (!g_thread_supported ()) g_thread_init (NULL);
+
+  cn->canna_lock = g_mutex_new();
+
+  g_mutex_lock(cn->canna_lock);
+
   clear_gline(cn);
   im_canna_init_preedit(cn);
 
@@ -220,6 +226,7 @@ im_canna_init (GtkIMContext *im_context)
   im_canna_create_candwin(cn);
 
   im_canna_disconnect_server(cn);
+  g_mutex_unlock(cn->canna_lock);
 
 #ifdef USE_KEYSNOOPER
   snooper_id = gtk_key_snooper_install((GtkKeySnoopFunc)snooper_func, NULL);
@@ -232,6 +239,7 @@ im_canna_finalize(GObject *obj) {
   IMContextCanna* cn = IM_CONTEXT_CANNA(obj);
 
   im_canna_disconnect_server(cn);
+  g_mutex_free(cn->canna_lock);
 
   g_free(cn->modebuf);
   g_free(cn->init_mode_string);
@@ -318,6 +326,8 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     return FALSE;
   };
 
+  g_mutex_lock(cn->canna_lock);
+
   if (im_canna_is_modechangekey(context, key)) {    
     if( cn->preedit_length > 0) {
       clear_preedit(cn);
@@ -338,6 +348,8 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     /* Editable widget should pass mnemonic if ja-input-mode is on */
     g_object_set_data(G_OBJECT(context), "immodule-needs-mnemonic",
 		      (gpointer)cn->ja_input_mode);
+
+    g_mutex_unlock(cn->canna_lock);
 
     return TRUE;
   } else {
@@ -362,14 +374,18 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
 
   if( cn->ja_input_mode == FALSE ) {
     /*** direct mode ***/
-    return im_canna_enter_direct_mode(context, key);
+    gboolean ret = im_canna_enter_direct_mode(context, key);
+    g_mutex_unlock(cn->canna_lock);
+    return ret;
   }
 
   /* Canna can't handle key with mod* key. */
 #define GDK_MOD_MASK (GDK_MOD1_MASK | GDK_MOD2_MASK | GDK_MOD3_MASK \
 		      | GDK_MOD4_MASK | GDK_MOD5_MASK)
-  if (key->state & GDK_MOD_MASK)
-      return FALSE;
+  if (key->state & GDK_MOD_MASK) {
+    g_mutex_unlock(cn->canna_lock);
+    return FALSE;
+  }
 
   cn->prev_connect_time = g_get_real_time();
 
@@ -400,9 +416,9 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
     im_canna_disable_ja_input_mode(context);
-    return ret;
   }
 
+  g_mutex_unlock(cn->canna_lock);
   return ret;
 }
 
@@ -530,7 +546,10 @@ im_canna_focus_out (GtkIMContext* context) {
   focused_context = NULL;
 #endif
 
-  if (cn->ja_input_mode == TRUE) {    
+  if (cn->ja_input_mode == TRUE) {
+    if(g_mutex_trylock(cn->canna_lock) == FALSE)
+      return;
+
     if(cn->preedit_length > 0) {
       gchar* str = NULL;
       
@@ -550,6 +569,8 @@ im_canna_focus_out (GtkIMContext* context) {
     clear_gline(cn);
     
     cn->need_to_reset_canna = TRUE;
+    
+    g_mutex_unlock(cn->canna_lock);
 
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
@@ -598,7 +619,10 @@ static void
 im_canna_reset(GtkIMContext* context) {
   IMContextCanna* cn = (IMContextCanna*)context;
 
-  if( cn->ja_input_mode == TRUE ) {    
+  if( cn->ja_input_mode == TRUE ) {
+    if(g_mutex_trylock(cn->canna_lock) == FALSE)
+      return;
+
     if(cn->preedit_length > 0) {
       clear_preedit(cn);
       routine_for_preedit_signal(context);
@@ -609,5 +633,7 @@ im_canna_reset(GtkIMContext* context) {
       clear_gline(cn);
       gtk_widget_hide(GTK_WIDGET(cn->candwin));
     }
+
+    g_mutex_unlock(cn->canna_lock);
   }
 }
