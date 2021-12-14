@@ -379,14 +379,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     return ret;
   }
 
-  /* Canna can't handle key with mod* key. */
-#define GDK_MOD_MASK (GDK_MOD1_MASK | GDK_MOD2_MASK | GDK_MOD3_MASK \
-		      | GDK_MOD4_MASK | GDK_MOD5_MASK)
-  if (key->state & GDK_MOD_MASK) {
-    g_mutex_unlock(cn->canna_lock);
-    return FALSE;
-  }
-
   cn->prev_connect_time = g_get_real_time();
 
   mode = im_canna_get_num_of_canna_mode(cn);

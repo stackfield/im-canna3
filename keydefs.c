@@ -111,6 +111,9 @@ gboolean im_canna_is_key_of_emacs_like_bindkey(GdkEventKey *key)
 
 gboolean im_canna_is_key_of_no_use_in_canna(GdkEventKey *key)
 {
+  if (key->state & GDK_MOD1_MASK)
+    return TRUE;
+
   switch (key->keyval) {
   case GDK_F10:
   case GDK_F11:
