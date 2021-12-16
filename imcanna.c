@@ -161,6 +161,7 @@ im_canna_enable_ja_input_mode_with_mode(GtkIMContext *context, int mode) {
   cn->prev_connect_time = g_get_real_time();
   clear_preedit(cn);
   clear_gline(cn);
+  cn->need_to_reset_canna = FALSE;
   im_canna_connect_server(cn);
   im_canna_force_change_mode(cn, mode);
   im_canna_update_modewin(cn);
@@ -358,7 +359,6 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
 	  im_canna_is_need_reconnect_for_time(context) == TRUE ) {
 	im_canna_disable_ja_input_mode(context);
 	im_canna_enable_ja_input_mode(context);
-	cn->need_to_reset_canna = FALSE;
 	gtk_widget_show_all(cn->modewin);
       }
     }
