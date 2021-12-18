@@ -527,6 +527,8 @@ im_canna_focus_in (GtkIMContext* context) {
     im_canna_show_message_modewin(cn, str);
     gtk_widget_show(GTK_WIDGET(cn->modewin));
     g_free(str);
+
+    cn->need_to_reset_canna = TRUE;
   }
 }
 
