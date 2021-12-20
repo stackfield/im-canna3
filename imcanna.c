@@ -514,6 +514,10 @@ im_canna_set_client_window(GtkIMContext* context, GdkWindow *win) {
   IMContextCanna* cn = IM_CONTEXT_CANNA(context);
 
   cn->client_window = win;
+
+  if (cn->ja_input_mode == TRUE) {
+    cn->need_to_reset_canna = TRUE;
+  }
 }
 
 static void
@@ -620,13 +624,14 @@ im_canna_reset(GtkIMContext* context) {
     if(cn->preedit_length > 0) {
       clear_preedit(cn);
       routine_for_preedit_signal(context);
-      cn->need_to_reset_canna = TRUE;
     }
 
     if( cn->gline_length > 0 ) {
       clear_gline(cn);
       gtk_widget_hide(GTK_WIDGET(cn->candwin));
     }
+
+    cn->need_to_reset_canna = TRUE;
 
     g_mutex_unlock(cn->canna_lock);
   }
