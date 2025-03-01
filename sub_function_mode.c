@@ -29,9 +29,11 @@ gboolean im_canna_function_mode (GtkIMContext *context, GdkEventKey *key) {
   }
 
   if (canna_code != 0)
-    nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    nbytes = jrKanjiString(cn->canna_context, canna_code, cn->kakutei_buf,
+			   IM_CANNA3_BUFSIZ, &cn->ks);
   else
-    nbytes = jrKanjiString(cn->canna_context, key->keyval, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    nbytes = jrKanjiString(cn->canna_context, key->keyval, cn->kakutei_buf,
+			   IM_CANNA3_BUFSIZ, &cn->ks);
 
   if (nbytes >= 2) {
     gchar* euc = g_strndup(cn->kakutei_buf, nbytes);

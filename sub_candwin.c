@@ -18,10 +18,12 @@ static void
 scroll_cb(GtkWidget* widget, GdkEventScroll* event, IMContextCanna* cn) {
   switch(event->direction) {
   case GDK_SCROLL_UP:
-    jrKanjiString(cn->canna_context, 0x02, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    jrKanjiString(cn->canna_context, 0x02, cn->kakutei_buf,
+		  IM_CANNA3_BUFSIZ, &cn->ks);
     break;
   case GDK_SCROLL_DOWN:
-    jrKanjiString(cn->canna_context, 0x06, cn->kakutei_buf, BUFSIZ, &cn->ks);
+    jrKanjiString(cn->canna_context, 0x06, cn->kakutei_buf,
+		  IM_CANNA3_BUFSIZ, &cn->ks);
     break;
   default:
     break;

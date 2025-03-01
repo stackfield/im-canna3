@@ -34,8 +34,9 @@ roma2kana_canna(GtkIMContext* context, gchar newinput) {
 
   IMContextCanna *cn = IM_CONTEXT_CANNA(context);
 
-  memset(cn->kakutei_buf, 0, BUFSIZ);
-  nbytes = jrKanjiString(cn->canna_context, newinput, cn->kakutei_buf, BUFSIZ, &cn->ks);
+  memset(cn->kakutei_buf, 0, IM_CANNA3_BUFSIZ);
+  nbytes = jrKanjiString(cn->canna_context, newinput, cn->kakutei_buf,
+			 IM_CANNA3_BUFSIZ, &cn->ks);
 
   if( nbytes > 0 && !(cn->kakutei_buf[0] < 0x20)) {
     gchar* euc = g_strndup(cn->kakutei_buf, nbytes);

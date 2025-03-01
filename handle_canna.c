@@ -129,7 +129,7 @@ void im_canna_force_change_mode(IMContextCanna* cn, int mode)
   ksv.ks = &(cn->ks);
   ksv.val = mode;
   ksv.buffer = cn->workbuf;
-  ksv.bytes_buffer = BUFSIZ;
+  ksv.bytes_buffer = IM_CANNA3_BUFSIZ;
   jrKanjiControl(cn->canna_context, KC_CHANGEMODE, (void*)&ksv);
 }
 
@@ -139,7 +139,7 @@ void im_canna_kill_unspecified_string(IMContextCanna* cn)
 
   ksv.ks = &(cn->ks);
   ksv.buffer = cn->workbuf;
-  ksv.bytes_buffer = BUFSIZ;
+  ksv.bytes_buffer = IM_CANNA3_BUFSIZ;
   jrKanjiControl(cn->canna_context, KC_KILL, (void*)&ksv);
 
   if(im_canna_get_num_of_canna_mode(cn) == CANNA_MODE_AlphaMode)

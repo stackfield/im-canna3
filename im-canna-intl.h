@@ -71,7 +71,6 @@ typedef struct _IMContextCanna {
 
   gboolean need_to_reset_canna;
 
-  GMutex *canna_lock;
 } IMContextCanna;
 
 typedef struct _IMContextCannaClass {
@@ -85,5 +84,7 @@ extern GType type_canna;
 #define IM_CONTEXT_CANNA_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS((obj), IM_CONTEXT_TYPE_CANNA, IMContextCannaClass))
 
 #define CANDWIN_FONT "monospace 12"
+
+#define IM_CANNA3_BUFSIZ 1024
 
 #endif
