@@ -65,8 +65,6 @@ typedef struct _IMContextCanna {
   gint gline_revPos, gline_revLen;
 
   int initinal_canna_mode;
-
-  gint64 prev_connect_time;
   gchar *init_mode_string;
 
 } IMContextCanna;
