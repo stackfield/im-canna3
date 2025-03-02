@@ -184,7 +184,7 @@ im_canna_init (GtkIMContext *im_context)
   PangoAttrList* attrs;
   PangoAttribute* attr;
 
-  cn->canna_context = (gint) im_context;
+  cn->canna_context = 0;
   cn->cand_stat = 0;
   cn->workbuf = g_new0(guchar, IM_CANNA3_BUFSIZ);
   cn->kakutei_buf = g_new0(guchar, IM_CANNA3_BUFSIZ);
