@@ -505,8 +505,6 @@ im_canna_focus_out (GtkIMContext* context) {
     
     gtk_widget_hide(GTK_WIDGET(cn->candwin));
     gtk_widget_hide(GTK_WIDGET(cn->modewin));
-
-    im_canna_disconnect_server(cn);
   }
 }
 
