@@ -319,7 +319,7 @@ im_canna_filter_keypress(GtkIMContext *context, GdkEventKey *key)
     }
   }
 
-  if( cn->ja_input_mode == FALSE ) {
+  if( cn->ja_input_mode == FALSE || mode == CANNA_MODE_EmptyMode) {
     /*** direct mode ***/
     gboolean ret = im_canna_enter_direct_mode(context, key);
     return ret;
