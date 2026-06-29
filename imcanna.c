@@ -180,7 +180,7 @@ im_canna_init (GtkIMContext *im_context)
   PangoAttrList* attrs;
   PangoAttribute* attr;
 
-  cn->canna_context = 0;
+  cn->canna_context = (int) cn;
   cn->cand_stat = 0;
   cn->workbuf = g_new0(guchar, IM_CANNA3_BUFSIZ);
   cn->kakutei_buf = g_new0(guchar, IM_CANNA3_BUFSIZ);
@@ -467,6 +467,7 @@ im_canna_focus_in (GtkIMContext* context) {
 #endif
   if (cn->ja_input_mode == TRUE) {
     gchar *str = euc2utf8(cn->init_mode_string);
+    im_canna_enable_ja_input_mode(context);
     im_canna_show_message_modewin(cn, str);
     gtk_widget_show(GTK_WIDGET(cn->modewin));
     g_free(str);
@@ -480,23 +481,21 @@ im_canna_focus_out (GtkIMContext* context) {
 #ifdef USE_KEYSNOOPER  
   focused_context = NULL;
 #endif
-
   if (cn->ja_input_mode == TRUE) {
-
     if(cn->preedit_length > 0) {
       gchar* str = NULL;
+      str = euc2utf8(cn->preedit_string);
       
       if(cn->commit_str != NULL) {
 	g_free(cn->commit_str);
 	cn->commit_str = NULL;
       }
-
-      str = euc2utf8(cn->preedit_string);
-      g_signal_emit_by_name(cn, "commit", str);
-      g_free(str);
-
+      
       clear_preedit(cn);
       routine_for_preedit_signal(context);
+      
+      g_signal_emit_by_name(cn, "commit", str);
+      g_free(str);
     }
 
     if( cn->gline_length > 0 ) {
