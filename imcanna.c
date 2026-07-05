@@ -493,6 +493,7 @@ im_canna_focus_out (GtkIMContext* context) {
       
       clear_preedit(cn);
       routine_for_preedit_signal(context);
+      im_canna_kill_unspecified_string(cn);
       
       g_signal_emit_by_name(cn, "commit", str);
       g_free(str);
@@ -552,7 +553,7 @@ im_canna_reset(GtkIMContext* context) {
   if( cn->ja_input_mode == TRUE ) {
     if(cn->preedit_length > 0) {
       routine_for_preedit_signal(context);
-      im_canna_init_preedit(cn);
+      clear_preedit(cn);
       im_canna_kill_unspecified_string(cn);
 
       if( cn->gline_length > 0 ) {
