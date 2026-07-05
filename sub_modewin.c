@@ -43,8 +43,6 @@ void im_canna_show_message_modewin(IMContextCanna* cn, gchar *str) {
 		      str);
   
   /* Set Mode Window Background Color to Blue */
-  attrs = gtk_label_get_attributes(GTK_LABEL(cn->modelabel));
-
   attrs = pango_attr_list_new();
   attr = pango_attr_background_new(0xDB00, 0xE900, 0xFF00);
   attr->start_index = 0;
@@ -88,8 +86,6 @@ void im_canna_update_modewin(IMContextCanna* cn) {
 		      cn->modebuf_utf8);
   
   /* Set Mode Window Background Color to Blue */
-  attrs = gtk_label_get_attributes(GTK_LABEL(cn->modelabel));
-
   attrs = pango_attr_list_new();
   attr = pango_attr_background_new(0xDB00, 0xE900, 0xFF00);
   attr->start_index = 0;
