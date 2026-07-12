@@ -485,15 +485,15 @@ im_canna_focus_out (GtkIMContext* context) {
     if(cn->preedit_length > 0) {
       gchar* str = NULL;
       str = euc2utf8(cn->preedit_string);
-      
+
       if(cn->commit_str != NULL) {
 	g_free(cn->commit_str);
 	cn->commit_str = NULL;
       }
       
       clear_preedit(cn);
-      routine_for_preedit_signal(context);
       im_canna_kill_unspecified_string(cn);
+      routine_for_preedit_signal(context);
       
       g_signal_emit_by_name(cn, "commit", str);
       g_free(str);
@@ -552,9 +552,15 @@ im_canna_reset(GtkIMContext* context) {
 
   if( cn->ja_input_mode == TRUE ) {
     if(cn->preedit_length > 0) {
-      routine_for_preedit_signal(context);
+      
+      if(cn->commit_str != NULL) {
+	g_free(cn->commit_str);
+	cn->commit_str = NULL;
+      }
+	    
       clear_preedit(cn);
       im_canna_kill_unspecified_string(cn);
+      routine_for_preedit_signal(context);
 
       if( cn->gline_length > 0 ) {
 	clear_gline(cn);
